@@ -1,0 +1,199 @@
+<title>Flujos de la app Viatto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,500..900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* Recorrido por roles: pestañas arriba, cada rol en bloques de etapa, pantallas en fila que se recorre en orden; clic abre la pantalla en grande */
+  :root {
+    --bg: #F2F6F3;
+    --surface: #FFFFFF;
+    --ink: #062A1C;
+    --muted: #4E6A5D;
+    --line: #D6E2DB;
+    --accent: #0A8F4E;
+    --lime: #74E39A;
+    --stage: #E6EFE9;
+    --display: "Archivo", "Arial Narrow", sans-serif;
+    --body: "Poppins", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #04170F; --surface: #0A2419; --ink: #E8F3EC; --muted: #9DB9AA; --line: #1D3B2E; --accent: #3FD483; --lime: #74E39A; --stage: #0E2C20; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #04170F; --surface: #0A2419; --ink: #E8F3EC; --muted: #9DB9AA; --line: #1D3B2E; --accent: #3FD483; --lime: #74E39A; --stage: #0E2C20; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--body); }
+  .wrap { max-width: 1280px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; }
+  header { display: grid; gap: 6px; }
+  .eyebrow { font: 600 12px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  h1 { font: 900 clamp(2.2rem, 6vw, 4rem)/0.95 var(--display); font-stretch: 68%; text-transform: uppercase; margin: 0; text-wrap: balance; }
+  .lead { max-width: 64ch; color: var(--muted); margin: 6px 0 0; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .stats b { color: var(--ink); }
+
+  nav.roles { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding-block: 14px; margin-top: 18px; background: var(--bg); border-bottom: 1px solid var(--line); scrollbar-width: none; }
+  nav.roles button { flex: none; display: flex; align-items: baseline; gap: 8px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 9px 16px; font: 600 14px var(--body); cursor: pointer; }
+  nav.roles button small { font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+  nav.roles button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  nav.roles button[aria-selected="true"] small { color: var(--lime); }
+  nav.roles button:focus-visible, .shot:focus-visible, .lb button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .role-head { display: grid; gap: 4px; margin-top: 28px; }
+  .role-head h2 { font: 800 clamp(1.6rem, 3.6vw, 2.4rem)/1 var(--display); font-stretch: 75%; text-transform: uppercase; margin: 0; }
+  .role-head p { margin: 0; color: var(--muted); max-width: 70ch; }
+  .role-head .proto { font-size: 13px; color: var(--muted); }
+  .role-head code { font-size: 12.5px; background: var(--stage); padding: 2px 6px; border-radius: 6px; }
+
+  .stage { margin-top: 26px; }
+  .stage h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; font: 700 15px var(--body); }
+  .stage h3 span { font: 500 13px var(--body); color: var(--muted); }
+  .row { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
+  .shot { flex: none; scroll-snap-align: start; display: grid; gap: 8px; align-content: start; background: none; border: 0; padding: 0; color: inherit; text-align: left; cursor: zoom-in; font: inherit; }
+  .shot .img { display: grid; place-items: center; background: var(--stage); border-radius: 18px; padding: 10px; }
+  .shot img { display: block; height: 340px; width: auto; max-width: none; border-radius: 10px; }
+  .desk .shot img { height: 220px; }
+  .shot .cap { display: flex; gap: 8px; font-size: 13px; max-width: 200px; }
+  .desk .shot .cap { max-width: 360px; }
+  .shot .cap b { font-variant-numeric: tabular-nums; color: var(--accent); flex: none; }
+  .shot:hover .img { outline: 2px solid var(--accent); }
+  .arrow { flex: none; align-self: center; color: var(--muted); font-size: 18px; margin-top: -24px; }
+
+  .lb { position: fixed; inset: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); display: grid; grid-template-rows: auto 1fr auto; gap: 10px; padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px calc(env(safe-area-inset-bottom, 0px) + 14px); }
+  .lb-top, .lb-bot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .lb-title { font: 600 15px var(--body); }
+  .lb-title small { display: block; font-weight: 500; color: var(--muted); }
+  .lb-fig { min-height: 0; display: grid; place-items: center; }
+  .lb-fig img { max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 14px; }
+  .lb button { border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 9px 16px; font: 600 14px var(--body); cursor: pointer; }
+  .lb button:disabled { opacity: .35; cursor: default; }
+  .lb-count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) { .shot img { height: 260px; } .desk .shot img { height: 160px; } }
+  @media (prefers-reduced-motion: no-preference) { .shot .img { transition: outline-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Viatto · MVP v2 · prototipos</div>
+    <h1>Flujos de la app Viatto</h1>
+    <p class="lead">Todas las pantallas de los prototipos, en el orden en que las recorre cada usuario: viajero, promotor local, operador (app móvil y panel web) y administración. Toca una pantalla para verla en grande y pasar a la siguiente con las flechas.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+  <nav class="roles" role="tablist" aria-label="Rol" id="tabs"></nav>
+  <main id="view"></main>
+</div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <div class="lb-top"><div class="lb-title" id="lbTitle"></div><button type="button" id="lbClose">Cerrar</button></div>
+  <div class="lb-fig"><img id="lbImg" alt="" /></div>
+  <div class="lb-bot"><button type="button" id="lbPrev">← Anterior</button><span class="lb-count" id="lbCount"></span><button type="button" id="lbNext">Siguiente →</button></div>
+</div>
+
+<script>
+const ROLES = [
+  { id: "viajero", name: "Viajero", desk: false, file: "Viatto App.dc.html",
+    intro: "La persona que ahorra el 50 % de su viaje, financia el resto y reserva tours en Cartagena.",
+    stages: [
+      ["Acceso", "Del recorrido inicial a la cuenta creada", 1, 5],
+      ["Recuperar contraseña", "Por correo o por SMS", 6, 11],
+      ["Primer ingreso", "Intereses para personalizar la app", 12, 14],
+      ["Inicio", "Pantalla principal y avisos", 15, 16],
+      ["Marketplace", "Explorar Cartagena y ver un paquete", 17, 19],
+      ["Ahorro y crédito 50/50", "Simular, verificar identidad y ahorrar a una meta", 20, 25],
+      ["Pago", "Medio de pago, confirmación y voucher", 26, 30],
+      ["Viajes y cuenta", "Mis viajes, calificación, perfil y referidos", 31, 34],
+    ],
+    screens: ["Recorrido","Bienvenida","Registro","Registro · Bienvenida","Inicio de sesión","Ingresa tu correo","Código por correo","Otro método · SMS","Código por SMS","Nueva contraseña","Contraseña actualizada","Intereses · intro","Intereses","Configurando","Inicio","Notificaciones","Explorar · mapa","Detalle de paquete","Landing compartida","Simulador 50/50","Verificación","Ahorrar","Recargar · meta","Nueva meta","Aporte a meta","Medio de pago","Confirmar pago","Pago exitoso","Checkout mixto","Voucher","Mis viajes","Calificar viaje","Perfil","Mis referidos"] },
+  { id: "promotor", name: "Promotor local", desk: false, file: "Viatto Promotor.dc.html",
+    intro: "Quien vende planes de Viatto en la calle o en su negocio, con su QR, su link y su comisión.",
+    stages: [
+      ["Alta", "Solicitud, perfil, verificación y aprobación", 1, 4],
+      ["Activación", "Su QR, su link y el kit físico", 5, 6],
+      ["Venta", "Catálogo, ficha del plan, venta asistida y link de pago", 7, 10],
+      ["Seguimiento y cobros", "Viajeros, panel y retiro de comisiones", 11, 13],
+    ],
+    screens: ["Quiero ser promotor","Perfil de promotor","KYC + antecedentes","Aprobación","Mi QR y mi link","Kit físico","Catálogo para vender","Ficha del plan","Venta asistida","Link de pago","Mis viajeros","Panel del promotor","Cobros"] },
+  { id: "operador-app", name: "Operador · app", desk: false, file: "Viatto Operador App.dc.html",
+    intro: "El operador turístico en el muelle o el punto de encuentro: reservas del día, check-in con QR y pagos.",
+    stages: [
+      ["Operación del día", "Hoy, reservas y detalle", 1, 3],
+      ["Check-in", "Escanear el QR del voucher y ver el resultado", 4, 5],
+      ["Pagos y avisos", "Liquidaciones recibidas y notificaciones", 6, 7],
+    ],
+    screens: ["Hoy","Reservas","Detalle de reserva","Check-in con QR","Resultado check-in","Pagos","Avisos"] },
+  { id: "operador-web", name: "Operador · panel web", desk: true, file: "Viatto Operador.dc.html",
+    intro: "El panel de escritorio del operador: vincularse, publicar su catálogo, confirmar reservas y ver lo que le pagan.",
+    stages: [
+      ["Alta y catálogo", "Vinculación y productos publicados", 1, 2],
+      ["Reservas", "Confirmar o rechazar dentro de 24 horas", 3, 3],
+      ["Dinero", "Liquidación, ventas y facturación", 4, 6],
+    ],
+    screens: ["Vinculación","Catálogo","Reservas","Liquidación","Ventas y reportes","Facturación"] },
+  { id: "admin", name: "Administración", desk: true, file: "Viatto Admin.dc.html",
+    intro: "El backoffice de Viatto: pendientes del día y los nueve módulos de control.",
+    stages: [
+      ["Vista general", "Resumen del día y analítica de uso", 1, 2],
+      ["Usuarios y dinero", "KYC, fiducia y tesorería, crédito", 3, 5],
+      ["Oferta y red", "Marketplace, promotores, millas y referidos", 6, 8],
+      ["Operación interna", "Finanzas, campañas y configuración", 9, 11],
+    ],
+    screens: ["Resumen","Analítica de uso","Usuarios y KYC","Fiducia y tesorería","Crédito","Marketplace","Red de promotores","Millas y referidos","Finanzas","Campañas","Configuración y auditoría"] },
+];
+
+const $ = (s) => document.querySelector(s);
+const pad = (n) => String(n).padStart(2, "0");
+const src = (r, i) => `capturas/${r.id}/${pad(i)}.jpg`;
+const total = ROLES.reduce((a, r) => a + r.screens.length, 0);
+$("#stats").innerHTML = `<span><b>${total}</b> pantallas</span>` + ROLES.map((r) => `<span><b>${r.screens.length}</b> ${r.name.toLowerCase()}</span>`).join("");
+
+let current = ROLES[0];
+function renderTabs() {
+  $("#tabs").innerHTML = ROLES.map((r) => `<button type="button" role="tab" id="tab-${r.id}" aria-selected="${r === current}" data-id="${r.id}">${r.name} <small>${r.screens.length}</small></button>`).join("");
+}
+function render() {
+  const r = current;
+  let html = `<section class="role-head"><h2>${r.name}</h2><p>${r.intro}</p><div class="proto">Prototipo interactivo: <code>${r.file}</code></div></section>`;
+  html += r.stages.map(([title, sub, a, b]) => {
+    const shots = [];
+    for (let i = a; i <= b; i++) {
+      shots.push(`<button type="button" class="shot" data-i="${i}" aria-label="Ver ${pad(i)} ${r.screens[i - 1]}"><span class="img"><img loading="lazy" src="${src(r, i)}" alt="${r.screens[i - 1]}" /></span><span class="cap"><b>${pad(i)}</b><span>${r.screens[i - 1]}</span></span></button>`);
+    }
+    return `<section class="stage ${r.desk ? "desk" : ""}"><h3>${title} <span>${sub}</span></h3><div class="row">${shots.join('<span class="arrow" aria-hidden="true">→</span>')}</div></section>`;
+  }).join("");
+  $("#view").innerHTML = html;
+}
+$("#tabs").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-id]"); if (!b) return;
+  current = ROLES.find((r) => r.id === b.dataset.id);
+  try { history.replaceState(null, "", "#" + current.id); } catch (_) {}
+  renderTabs(); render();
+});
+const start = ROLES.find((r) => r.id === location.hash.slice(1)); if (start) current = start;
+renderTabs(); render();
+
+let idx = 1;
+function show() {
+  const r = current;
+  $("#lbImg").src = src(r, idx); $("#lbImg").alt = r.screens[idx - 1];
+  const st = r.stages.find(([, , a, b]) => idx >= a && idx <= b);
+  $("#lbTitle").innerHTML = `${pad(idx)} · ${r.screens[idx - 1]}<small>${r.name} · ${st ? st[0] : ""}</small>`;
+  $("#lbCount").textContent = `${idx} de ${r.screens.length}`;
+  $("#lbPrev").disabled = idx <= 1; $("#lbNext").disabled = idx >= r.screens.length;
+}
+$("#view").addEventListener("click", (e) => {
+  const s = e.target.closest(".shot"); if (!s) return;
+  idx = +s.dataset.i; show(); $("#lb").hidden = false; $("#lbClose").focus();
+});
+const close = () => { $("#lb").hidden = true; };
+$("#lbClose").onclick = close;
+$("#lbPrev").onclick = () => { if (idx > 1) { idx--; show(); } };
+$("#lbNext").onclick = () => { if (idx < current.screens.length) { idx++; show(); } };
+document.addEventListener("keydown", (e) => {
+  if ($("#lb").hidden) return;
+  if (e.key === "Escape") close();
+  if (e.key === "ArrowRight") $("#lbNext").click();
+  if (e.key === "ArrowLeft") $("#lbPrev").click();
+});
+</script>
