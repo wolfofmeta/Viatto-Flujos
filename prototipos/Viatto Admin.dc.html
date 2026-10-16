@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html{color-scheme:light}input,select,textarea{background-color:#fff;color:#062A1C}
+body{margin:0;background:#F3F7F5;font-family:Poppins,sans-serif;-webkit-font-smoothing:antialiased;color:#062A1C}
+a{color:#0A7A43}a:hover{color:#075C33}
+*{box-sizing:border-box}
+button,input,select{font-family:inherit}
+select{appearance:none;-webkit-appearance:none}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #0A8F4E;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;font-family:Poppins,sans-serif">
+
+  <aside style="width:250px;flex:none;background:#062A1C;color:#fff;display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:none;align-self:flex-start">
+    <img src="assets/viatto_logo_greenwhite.png" alt="Viatto" style="width:132px;height:auto;margin:4px 0 6px 2px;display:block">
+    <div style="font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin:0 0 18px 6px">Backoffice · Admin</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ side }}" as="it" hint-placeholder-count="9">
+        <button onClick="{{ it.go }}" disabled="{{ it.locked }}" style="display:flex;align-items:center;gap:10px;min-height:40px;border:0;border-radius:10px;padding:6px 10px;background:{{ it.bg }};color:{{ it.color }};font:500 13px Poppins,sans-serif;cursor:pointer;text-align:left;opacity:{{ it.op }}">
+          <span style="flex:1">{{ it.label }}</span>
+          <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="min-width:22px;height:20px;border-radius:10px;padding:0 6px;background:#0A8F4E;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ it.badge }}</span></sc-if>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;padding-top:18px;display:flex;flex-direction:column;gap:4px;padding-left:6px">
+      <a href="Viatto App.dc.html" style="font-size:12px;color:#9FF0C6">← App del viajero</a>
+      <a href="Viatto Promotor.dc.html" style="font-size:12px;color:#9FF0C6">← App del promotor</a>
+      <a href="Viatto Operador.dc.html" style="font-size:12px;color:#9FF0C6">← Panel del operador</a>
+    </div>
+  </aside>
+
+  <main style="flex:1;min-width:0;padding:22px 32px 60px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:flex-end">
+      <span style="font-size:12px;color:#455073">Ver como</span>
+      <div style="position:relative">
+        <select value="{{ role }}" onChange="{{ onRole }}" style="height:40px;border:1px solid #d6d8de;border-radius:12px;padding:0 38px 0 14px;font:500 13px Poppins,sans-serif;color:#062A1C;background:#fff;cursor:pointer">
+          <sc-for list="{{ roles }}" as="r" hint-placeholder-count="5"><option value="{{ r }}">{{ r }}</option></sc-for>
+        </select>
+        <svg style="position:absolute;right:12px;top:12px;pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#455073" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:4px 12px 4px 4px;border-radius:20px;background:#fff;border:1px solid #E3EBE7">
+        <span style="width:32px;height:32px;border-radius:50%;background:#062A1C;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ me.ini }}</span>
+        <span style="font-size:12.5px;font-weight:500">{{ me.name }}</span>
+      </div>
+    </div>
+
+    <header style="display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#0A7A43">{{ head.kicker }}</span>
+      <h1 style="margin:0;font-size:28px;font-weight:600;letter-spacing:-.3px;line-height:1.2">{{ head.title }}</h1>
+      <p style="margin:0;font-size:14px;color:#455073;max-width:720px;text-wrap:pretty">{{ head.sub }}</p>
+    </header>
+
+    <sc-if value="{{ hasTabs }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:4px;border-bottom:2px solid #DFE8E3">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.pick }}" style="height:42px;border:0;background:none;padding:0 14px;margin-bottom:-2px;border-bottom:2px solid {{ t.line }};color:{{ t.color }};font:{{ t.font }};cursor:pointer">{{ t.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <div data-screen-label="{{ screenLabel }}" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start">
+      <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="2">
+
+        <sc-if value="{{ b.isKpis }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <sc-for list="{{ b.items }}" as="k" hint-placeholder-count="4">
+              <div style="background:#fff;border-radius:16px;border:1px solid #E3EBE7;padding:14px 16px;display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:600;color:{{ k.color }}">{{ k.v }}</span><span style="font-size:12px;color:#455073">{{ k.l }}</span></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isUsers }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};background:#fff;border:1px solid #E3EBE7;border-radius:16px;overflow:hidden">
+            <div style="padding:14px 16px;font-size:14.5px;font-weight:600;border-bottom:1px solid #EEF2F0">{{ b.title }}</div>
+            <sc-for list="{{ b.rows }}" as="u" hint-placeholder-count="5">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 16px;border-bottom:1px solid #EEF2F0">
+                <span style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;line-height:1.35"><b style="font-size:13.5px;font-weight:600">{{ u.name }}</b><span style="font-size:11.5px;color:#6b7186;overflow-wrap:anywhere">{{ u.sub }}</span></span>
+                <span style="flex:none;font-size:12px;font-weight:600;padding:4px 10px;border-radius:10px;background:#F1E6FB;color:#7A35BD">{{ u.bal }} millas</span>
+                <span style="flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+                  <input value="{{ u.n }}" onChange="{{ u.onN }}" placeholder="0" inputMode="numeric" aria-label="Millas" style="flex:0 0 90px;height:36px;border:1px solid #d6d8de;border-radius:10px;padding:0 10px;font:500 13px Poppins,sans-serif;color:#062A1C">
+                  <input value="{{ u.r }}" onChange="{{ u.onR }}" placeholder="Motivo, ej. compensación por demora" aria-label="Motivo" style="flex:1 1 180px;min-width:0;height:36px;border:1px solid #d6d8de;border-radius:10px;padding:0 10px;font:500 13px Poppins,sans-serif;color:#062A1C">
+                  <button onClick="{{ u.add }}" style="flex:none;height:36px;padding:0 12px;border:1px solid #2E6A4E;border-radius:10px;background:#2E6A4E;color:#fff;font:600 12.5px Poppins,sans-serif;cursor:pointer;white-space:nowrap">+ Añadir</button>
+                  <button onClick="{{ u.sub2 }}" style="flex:none;height:36px;padding:0 12px;border:1px solid #8a6410;border-radius:10px;background:#fff;color:#6b4708;font:600 12.5px Poppins,sans-serif;cursor:pointer;white-space:nowrap">− Quitar</button>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isSearch }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:#fff;border:1px solid #E3EBE7;border-radius:16px;padding:12px 14px">
+            <span style="flex:1 1 260px;max-width:420px;display:flex;align-items:center;gap:8px;height:40px;border:1px solid #d6d8de;border-radius:12px;padding:0 12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#455073" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input value="{{ b.value }}" onChange="{{ b.onChange }}" placeholder="{{ b.ph }}" style="flex:1;min-width:0;border:0;outline:0;font:500 13px Poppins,sans-serif;color:#062A1C;background:transparent"></span>
+            <span style="font-size:12.5px;color:#455073">{{ b.count }}</span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isNote }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};border-radius:14px;padding:12px 16px;font-size:13px;line-height:1.55;background:{{ b.bg }};color:{{ b.color }}">{{ b.text }}</div>
+        </sc-if>
+
+        <sc-if value="{{ b.isProcess }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:18px 20px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+              <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ b.title }}</span><span style="font-size:12.5px;color:#455073">{{ b.sub }}</span></div>
+              <sc-for list="{{ b.actions }}" as="a" hint-placeholder-count="1"><button onClick="{{ a.on }}" style="height:40px;border:1.5px solid {{ a.border }};border-radius:12px;background:{{ a.bg }};color:{{ a.color }};padding:0 16px;font:600 13px Poppins,sans-serif;cursor:pointer">{{ a.label }}</button></sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px">
+              <sc-for list="{{ b.steps }}" as="s" hint-placeholder-count="5">
+                <div style="border-radius:14px;border:{{ s.border }};background:{{ s.bg }};padding:12px 14px;display:flex;flex-direction:column;gap:4px">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;background:{{ s.dot }};color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ s.mark }}</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:{{ s.kColor }}">{{ s.kicker }}</span></div>
+                  <span style="font-size:13.5px;font-weight:600">{{ s.title }}</span>
+                  <span style="font-size:12px;line-height:1.45;color:#455073">{{ s.body }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};background:#fff;border-radius:18px;border:1px solid #E3EBE7;overflow:hidden;display:flex;flex-direction:column">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 18px">
+              <span style="flex:1;font-size:15px;font-weight:600">{{ b.title }}</span>
+              <sc-for list="{{ b.actions }}" as="a" hint-placeholder-count="1"><button onClick="{{ a.on }}" style="height:36px;border:1.5px solid {{ a.border }};border-radius:10px;background:{{ a.bg }};color:{{ a.color }};padding:0 14px;font:600 12.5px Poppins,sans-serif;cursor:pointer">{{ a.label }}</button></sc-for>
+            </div>
+            <div style="overflow-x:auto">
+              <div style="min-width:{{ b.minW }}">
+                <div style="display:grid;grid-template-columns:{{ b.cols }};gap:10px;padding:10px 18px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6b7186;border-top:1px solid #EAF0ED;border-bottom:1px solid #EAF0ED;background:#F7FAF8">
+                  <sc-for list="{{ b.head }}" as="h" hint-placeholder-count="5"><span>{{ h }}</span></sc-for>
+                </div>
+                <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:{{ b.cols }};gap:10px;align-items:center;padding:12px 18px;border-bottom:1px solid #EEF3F0;font-size:13px">
+                    <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
+                      <sc-if value="{{ c.isTag }}" hint-placeholder-val="{{ false }}"><span style="justify-self:start;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ c.bg }};color:{{ c.color }}">{{ c.t }}</span></sc-if>
+                      <sc-if value="{{ c.isText }}" hint-placeholder-val="{{ true }}"><span style="display:flex;flex-direction:column;line-height:1.35;min-width:0"><span style="font-weight:{{ c.fw }}">{{ c.t }}</span><sc-if value="{{ c.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:#6b7186">{{ c.sub }}</span></sc-if></span></sc-if>
+                      <sc-if value="{{ c.isInput }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px"><input value="{{ c.value }}" onChange="{{ c.onChange }}" placeholder="{{ c.ph }}" style="width:{{ c.w }};min-width:0;height:36px;border:1px solid #d6d8de;border-radius:10px;padding:0 10px;font:500 13px Poppins,sans-serif;color:#062A1C"><span style="font-size:12px;color:#455073">{{ c.unit }}</span></span></sc-if>
+                    </sc-for>
+                    <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap">
+                      <sc-for list="{{ r.btns }}" as="a" hint-placeholder-count="0"><button onClick="{{ a.on }}" style="height:32px;border:1.5px solid {{ a.border }};border-radius:9px;background:{{ a.bg }};color:{{ a.color }};padding:0 10px;font:600 11.5px Poppins,sans-serif;cursor:pointer;white-space:nowrap">{{ a.label }}</button></sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ b.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:22px 18px;font-size:13px;color:#6b7186">Todo al día. No hay pendientes.</div></sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isBars }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:15px;font-weight:600">{{ b.title }}</span>
+            <sc-for list="{{ b.items }}" as="x" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ x.l }}</span><b style="font-weight:600">{{ x.v }}</b></div><div style="height:10px;border-radius:5px;background:#E8F0EC"><div style="height:100%;width:{{ x.w }};border-radius:5px;background:{{ x.c }}"></div></div></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ b.isTasks }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ b.col }};background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:16px 18px;display:flex;flex-direction:column">
+            <span style="font-size:15px;font-weight:600;margin-bottom:6px">{{ b.title }}</span>
+            <sc-for list="{{ b.items }}" as="x" hint-placeholder-count="5">
+              <button onClick="{{ x.go }}" style="display:flex;align-items:center;gap:12px;padding:11px 0;border:0;border-bottom:1px solid #EEF3F0;background:none;text-align:left;cursor:pointer">
+                <span style="flex:none;min-width:34px;height:34px;border-radius:10px;padding:0 6px;background:{{ x.bg }};color:{{ x.color }};font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ x.count }}</span>
+                <span style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:13.5px;font-weight:500;color:#062A1C">{{ x.t }}</span><span style="font-size:11.5px;color:#6b7186">{{ x.sub }}</span></span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#455073" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+      </sc-for>
+    </div>
+  </main>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;background:#062A1C;color:#fff;font-size:13px;padding:11px 20px;border-radius:22px">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const cop = n => '$' + Math.round(n).toLocaleString('es-CO');
+const mm = n => '$' + (n/1e6).toLocaleString('es-CO',{ maximumFractionDigits:1 }) + ' M';
+const TAG = { ok:['#DDECE2','#1f5a3f'], warn:['#F6EACB','#6b4708'], bad:['#DDF7E9','#075C33'], info:['#E3E9F6','#2c4a86'], muted:['#ECEDF0','#455073'] };
+const BTN = { primary:['#0A8F4E','#fff','#0A8F4E'], ok:['#2E6A4E','#fff','#2E6A4E'], ghost:['#fff','#062A1C','#d6d8de'], warn:['#fff','#6b4708','#8a6410'], dark:['#062A1C','#fff','#062A1C'] };
+const tx = (t, sub) => ({ t:String(t), sub: sub||null, isText:true, fw:'400' });
+const bx = (t, sub) => ({ t:String(t), sub: sub||null, isText:true, fw:'600' });
+const tag = (t, k) => ({ t, isTag:true, bg:TAG[k][0], color:TAG[k][1] });
+const btn = (label, on, k) => { const c = BTN[k||'ghost']; return { label, on, bg:c[0], color:c[1], border:c[2] }; };
+const K = (items) => ({ isKpis:true, col:'1/-1', items: items.map(([v,l,color]) => ({ v, l, color: color||'#062A1C' })) });
+const N = (text, k) => ({ isNote:true, col:'1/-1', text, bg:TAG[k||'info'][0], color:TAG[k||'info'][1] });
+const T = (title, cols, head, rows, o) => { o = o||{}; return { isTable:true, title, cols: cols + ' ' + (o.actW||'0px'), head:[...head, ''], rows, actions:o.actions||[], col:o.col||'1/-1', empty: rows.length===0, minW:o.minW||'720px' }; };
+const BR = (title, items, col) => { const mx = Math.max(...items.map(i => i[1])); return { isBars:true, title, col: col||'1/-1', items: items.map(([l,v,c,lab]) => ({ l, v: lab||mm(v), w: Math.round(v/mx*100)+'%', c: c||'#0A8F4E' })) }; };
+const STEP = { done:['1px solid #cfe3d6','#f2f8f4','#2E6A4E','#1f5a3f'], cur:['1.5px dashed #d9a93a','#FBF4E2','#0A8F4E','#8a6410'], todo:['1px solid #E3EBE7','#fff','#c9ccd6','#6b7186'] };
+const P = (title, sub, steps, actions) => ({ isProcess:true, col:'1/-1', title, sub, actions: actions||[], steps: steps.map(([kicker,t,body,state],i) => { const s = STEP[state]; return { kicker, title:t, body, border:s[0], bg:s[1], dot:s[2], kColor:s[3], mark: state==='done' ? '✓' : String(i+1) }; }) });
+const ROLE_USERS = { Superadmin:'Ana Gutiérrez', Operaciones:'Sebastián Lara', Riesgo:'Felipe Mora', Finanzas:'Diana Ruiz', Contenido:'Carolina Vélez' };
+const ROLE_MODS = { Superadmin:['ana','kyc','fid','cred','mkt','prom','mil','fin','camp','cfg'], Operaciones:['ana','kyc','mkt','prom','mil','camp'], Riesgo:['kyc','cred','prom','mil'], Finanzas:['ana','fid','cred','mil','fin'], Contenido:['ana','mkt','camp'] };
+const MODS = [['home','Resumen'],['ana','Analítica de uso'],['kyc','1. Usuarios y KYC'],['fid','2. Fiducia y tesorería'],['cred','3. Crédito'],['mkt','4. Marketplace'],['prom','5. Red de promotores'],['mil','6. Millas y referidos'],['fin','7. Finanzas'],['camp','8. Campañas'],['cfg','9. Configuración y auditoría']];
+const TABS = { ana:['Uso de la app','Origen de las visitas','Por usuario'], kyc:['Cola de verificación','Alertas SARLAFT y listas','Bloqueos y soporte'], fid:['Conciliación diaria','Rendimientos y cashback'], cred:['Solicitudes','Políticas y score','Cartera y cobranza'],
+  mkt:['Operadores','Curaduría de productos','Comisión por categoría','Disputas y reembolsos','Reservas y viajes','Calificaciones'],
+  mil:['Resumen','Ajustar millas','Reglas','Referidos'], prom:['Aprobación','Atribución y residual','Detección de fraude'],
+  fin:['Liquidación semanal','Factura electrónica DIAN','Ingresos por motor'], camp:['Push geolocalizado','Notificaciones in-app','Ofertas y destacados','Intereses de usuarios'], cfg:['Parámetros','Roles y permisos','Bitácora de cambios'] };
+const HEADS = { home:['Backoffice','Resumen del día','Lo que necesita una decisión hoy y el estado de los tres procesos recurrentes.'],
+  ana:['Analítica','Analítica de uso','Cuántas veces entran los usuarios a la app, cuánto tiempo se quedan y desde dónde nos visitan. Últimos 30 días.'],
+  kyc:['Módulo 1','Usuarios y KYC','Verificación de identidad con Truora, alertas SARLAFT y soporte a cuentas bloqueadas.'],
+  fid:['Módulo 2','Fiducia y tesorería','El saldo de las billeteras debe ser igual al saldo en el encargo fiduciario. Los rendimientos se reparten 50/50.'],
+  cred:['Módulo 3','Crédito','Financia el 50% restante del viaje. El desembolso va al operador, nunca a la billetera del viajero.'],
+  mkt:['Módulo 4','Marketplace','Alta de operadores, curaduría, comisiones, disputas, reservas de los viajeros y calificaciones de experiencias.'],
+  prom:['Módulo 5','Red de promotores','Aprobación de promotores, reglas de atribución y residual, y detección de fraude.'],
+  mil:['Módulo 6','Millas y referidos','Programa de puntos Viatto: cómo se ganan, cuánto valen y quién invitó a quién con su código de referido.'],
+  fin:['Módulo 7','Finanzas','Liquidaciones a operadores y promotores, factura electrónica e ingresos por motor de negocio.'],
+  camp:['Módulo 8','Campañas','Push geolocalizado, notificaciones de la app, ofertas y experiencias destacadas del Inicio, e intereses elegidos en el primer ingreso.'],
+  cfg:['Módulo 9','Configuración y auditoría','Parámetros del negocio, roles y permisos, y la bitácora de todo cambio hecho en el backoffice.'] };
+
+class Component extends DCLogic {
+  state = { mod:'home', tabs:{}, role:'Superadmin', toast:null, cb:'pending', liq:'disputes',
+    params:{ cbUser:'50', tn:'2', confirmH:'24', recMax:'20000000', scoreAuto:'700', scoreMan:'600', credMax:'8000000', plazo:'12', tasa:'1,8', ahorroMin:'50',
+      c_islas:'10', c_ciudad:'12', c_hotel:'8', c_trans:'5', c_gastro:'15', attrWin:'12', residual:'2', promMax:'20', refCap:'10',
+      milAporte:'10', milRate:'40', milRefReg:'200', milRefFirst:'500', milValue:'10', milExp:'24', milMin:'1000',
+      cuotas:'6, 12 y 24', freq:'Quincenal o mensual', intMin:'5', otpMin:'10', otpTries:'5' },
+    kyc:[
+      { id:'U-1042', name:'Camila Restrepo', doc:'CC 1.020.334.118', type:'Viajero', score:61, reason:'Selfie con baja coincidencia', st:'manual' },
+      { id:'U-1043', name:'Juan Pérez', doc:'CC 73.145.990', type:'Promotor', score:88, reason:'Antecedentes en revisión', st:'manual' },
+      { id:'U-1044', name:'Marta Sierra', doc:'CC 45.778.201', type:'Viajero', score:54, reason:'Documento posiblemente alterado', st:'manual' },
+      { id:'U-1045', name:'Diego Ariza', doc:'PA X8812934', type:'Viajero extranjero', score:79, reason:'Pasaporte: validar vigencia', st:'manual' } ],
+    sarlaft:[
+      { id:'AL-311', name:'Jorge H. Molina', kind:'Coincidencia parcial en lista OFAC', sev:'Alta', st:'open' },
+      { id:'AL-312', name:'Paula Ortega', kind:'Persona expuesta políticamente (PEP)', sev:'Media', st:'open' },
+      { id:'AL-313', name:'Inversiones Duarte S.A.S.', kind:'Recargas por $48.000.000 en 2 días, fuera de perfil', sev:'Alta', st:'open' } ],
+    support:[
+      { id:'S-882', name:'Andrés Lozano', reason:'Cuenta bloqueada por 5 intentos de PIN', ch:'WhatsApp', st:'open', block:true },
+      { id:'S-883', name:'Laura León', reason:'No ve el cashback de septiembre', ch:'App', st:'open' },
+      { id:'S-884', name:'Kevin Mosquera', reason:'Pregunta por su reembolso de TA-4W9X', ch:'Correo', st:'open' },
+      { id:'S-885', name:'Valentina Cruz', reason:'Recuperar contraseña: no le llega el código OTP por SMS', ch:'App', st:'open', otp:true } ],
+    concil:[ { d:'5 oct', w:2184330200, f:2184330200 }, { d:'4 oct', w:2171904500, f:2171644500, st:'diff' }, { d:'3 oct', w:2168120000, f:2168120000 }, { d:'2 oct', w:2160455900, f:2160455900 } ],
+    credit:[
+      { id:'CR-2201', name:'Ana Martínez', pkg:'Cartagena 4 noches + Islas', total:3800000, saved:1900000, score:742, rec:'Aprobar', st:'disb' },
+      { id:'CR-2202', name:'Carlos Rojas', pkg:'Barú 3 noches', total:2600000, saved:1300000, score:655, rec:'Manual', st:'manual' },
+      { id:'CR-2203', name:'Paula Ortega', pkg:'Cartagena 3 noches', total:2200000, saved:1100000, score:590, rec:'Rechazar', st:'rej' },
+      { id:'CR-2204', name:'Sofía Gómez', pkg:'Cartagena + Rosario', total:3100000, saved:1550000, score:688, rec:'Manual', st:'manual' } ],
+    mora:[ { id:'CR-1988', name:'Luis Fernando Paz', saldo:1450000, dias:12, last:'Recordatorio WhatsApp · 3 oct', st:'mora' },
+      { id:'CR-1932', name:'Natalia Rey', saldo:980000, dias:37, last:'Llamada · 1 oct', st:'mora' },
+      { id:'CR-1876', name:'Óscar Benítez', saldo:2100000, dias:64, last:'Carta de cobro · 28 sep', st:'mora' } ],
+    ops:[ { id:'OP-21', name:'Velas del Caribe S.A.S.', nit:'901.223.554-7', cat:'Islas y náutica', st:'docs' },
+      { id:'OP-22', name:'Chivas del Caribe', nit:'900.877.120-3', cat:'Tours en ciudad', st:'contract' },
+      { id:'OP-23', name:'Hotel Casa Getsemaní', nit:'901.510.008-2', cat:'Hoteles', st:'docs' },
+      { id:'OP-14', name:'Náutica Bahía S.A.S.', nit:'901.456.782-1', cat:'Islas y náutica', st:'ok' } ],
+    prods:[ { id:'baru', title:'Snorkel en Barú', op:'Náutica Bahía', price:240000, st:'cur' },
+      { id:'getn', title:'Getsemaní de noche', op:'Sabores de la Heroica', price:150000, st:'cur' },
+      { id:'pel', title:'Isla privada Pelícanos', op:'Náutica Bahía', price:520000, st:'adj' } ],
+    disputes:[ { id:'D-071', bk:'TA-5T1C', who:'Grupo Pérez', op:'Náutica Bahía', reason:'La lancha salió 50 min tarde', amount:1740000, st:'open' },
+      { id:'D-072', bk:'TA-1Q7M', who:'Mateo Ruiz', op:'Velas del Caribe', reason:'Cancelaron por clima y no reprogramaron', amount:520000, st:'open' } ],
+    proms:[ { id:'PR-301', name:'Juan Pérez', type:'Taxista', zona:'Aeropuerto', ant:'Sin hallazgos', st:'pending' },
+      { id:'PR-302', name:'Yuliana Castro', type:'Recepción · Hotel Caribe', zona:'Bocagrande', ant:'Sin hallazgos', st:'pending' },
+      { id:'PR-303', name:'Ramiro Ortiz', type:'Guía', zona:'Centro Histórico', ant:'Anotación por revisar', st:'pending' } ],
+    fraud:[ { id:'F-55', who:'SANTI-RUTAS', signal:'Autocompra: el viajero usa el mismo dispositivo del promotor', risk:'Alta', st:'open' },
+      { id:'F-56', who:'KEVIN-T7', signal:'14 escaneos en 5 minutos desde la misma IP', risk:'Media', st:'open' } ],
+    camps:[ { id:'C-11', name:'Bienvenida a Cartagena', msg:'Llegaste a Cartagena: 15% en Islas del Rosario hoy', seg:'Viajeros que entran a Cartagena (GPS)', reach:'2.340 / semana', on:true },
+      { id:'C-12', name:'Atardecer en la bahía', msg:'Velero al atardecer: quedan 6 cupos', seg:'En Centro y Getsemaní, 4–6 p.m.', reach:'860 / día', on:true },
+      { id:'C-13', name:'Plan B por lluvia', msg:'¿Llueve? Getsemaní: arte y sabores bajo techo', seg:'Cartagena + alerta de lluvia', reach:'Según clima', on:false } ],
+    banners:[ { id:'B-4', tag:'Ahorra 50/50', t:'Cartagena 4 noches', place:'Inicio · Ofertas (1)', until:'Permanente', on:true },
+      { id:'B-5', tag:'−20% · 48 h', t:'Día en Islas del Rosario', place:'Inicio · Ofertas (2)', until:'Hasta 7 oct', on:true },
+      { id:'B-6', tag:'Cashback x2', t:'City tour Ciudad Amurallada', place:'Inicio · Ofertas (3)', until:'Hasta 31 oct', on:true } ],
+    reviews:[ { id:'RV-501', who:'Laura León', prod:'Tour Bahía de Cartagena', op:'Velas del Caribe', stars:5, c:'El atardecer desde el barco fue increíble, el guía muy amable.', st:'pending' },
+      { id:'RV-502', who:'Mateo Ruiz', prod:'City tour Ciudad Amurallada', op:'Heroica Tours', stars:2, c:'Llegaron 40 minutos tarde al punto de encuentro y no avisaron.', st:'pending' },
+      { id:'RV-503', who:'Ana Martínez', prod:'Tour 5 Islas', op:'Náutica Bahía', stars:4, c:'Muy buen plan, el almuerzo podría mejorar.', st:'pub' },
+      { id:'RV-504', who:'Kevin Mosquera', prod:'Museo de la Esmeralda', op:'Heroica Tours', stars:1, c:'[Contiene datos de contacto de otro operador]', st:'pending' } ],
+    notifs:[ { id:'N-1', name:'Cashback acreditado', trig:'Al abonar el lote mensual', ch:'Push + bandeja', on:true },
+      { id:'N-2', name:'Reserva confirmada', trig:'Cuando el operador confirma', ch:'Push + bandeja + correo', on:true },
+      { id:'N-3', name:'Oferta por tiempo limitado', trig:'Banner activo en Ofertas', ch:'Bandeja', on:true },
+      { id:'N-4', name:'Avance de meta (50%, 75%, 100%)', trig:'Al cruzar cada hito', ch:'Push + bandeja', on:true },
+      { id:'N-5', name:'Recordatorio de aporte', trig:'3 días antes de la cuota', ch:'Push + WhatsApp', on:true },
+      { id:'N-6', name:'Millas ganadas', trig:'Aporte, calificación o referido', ch:'Bandeja', on:true },
+      { id:'N-7', name:'Inicio de sesión nuevo', trig:'Dispositivo o ciudad nueva', ch:'Push + correo', on:true } ],
+    featured:[ { id:'islas5', t:'Tour 5 Islas', tag:'Más vendido', op:'Náutica Bahía', on:true }, { id:'bahia', t:'Tour Bahía de Cartagena', tag:'Al atardecer', op:'Velas del Caribe', on:true }, { id:'esmeralda', t:'Museo de la Esmeralda', tag:'Cultura', op:'Heroica Tours', on:true } ],
+    milUsers:[ { id:'U-0981', name:'David Restrepo', mail:'david.restrepo@gmail.com', code:'DAVID-CTG', bal:2450 },
+      { id:'U-0712', name:'Laura Gómez', mail:'laura.gomez@gmail.com', code:'LAURA-CTG', bal:5900 },
+      { id:'U-1043', name:'Juan Pérez', mail:'juan.perez@gmail.com', code:'JUAN-CTG', bal:3200 },
+      { id:'U-0655', name:'Ana Martínez', mail:'ana.martinez@hotmail.com', code:'ANA-CTG', bal:820 },
+      { id:'U-1101', name:'Daniel Ríos', mail:'daniel.rios@gmail.com', code:'DANIEL-CTG', bal:1300 },
+      { id:'U-1120', name:'Lorena Díaz', mail:'lorena.diaz@gmail.com', code:'LORENA-CTG', bal:200 },
+      { id:'U-0890', name:'Carlos Rojas', mail:'carlos.rojas@gmail.com', code:'CARLOS-CTG', bal:0 } ],
+    milAdj:{}, milQ:'',
+    milMoves:[ ['5 oct','David Restrepo','Referido Laura Gómez hizo su primer aporte',500,'Referido'],['3 oct','David Restrepo','Aporte a Cartagena 4 noches',80,'Aporte'],['30 sep','David Restrepo','Calificó Tour Bahía de Cartagena',40,'Calificación'],['29 sep','Ana Martínez','Redimió en Tour 5 Islas',-1200,'Redención'],['28 sep','Juan Pérez','Registro de referido con su código',200,'Referido'] ],
+    refFraud:[ { id:'RF-12', who:'MARIA-CTG', signal:'9 cuentas registradas con su código desde el mismo dispositivo', st:'open' } ],
+    log:[ { when:'5 oct · 8:02 a.m.', who:'Diana Ruiz', mod:'Fiducia', t:'Cargó el reporte de rendimiento de septiembre' },
+      { when:'4 oct · 6:40 p.m.', who:'Felipe Mora', mod:'Crédito', t:'Aprobó manualmente CR-2190' },
+      { when:'4 oct · 11:15 a.m.', who:'Carolina Vélez', mod:'Campañas', t:'Activó la campaña C-12 «Atardecer en la bahía»' },
+      { when:'3 oct · 9:30 a.m.', who:'Ana Gutiérrez', mod:'Configuración', t:'Cambió la confirmación del operador de 48 h a 24 h' } ] };
+
+  componentWillUnmount(){ clearTimeout(this.tt); }
+  say(m){ this.setState({ toast:m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 2400); }
+  log(mod, t, toast){ const when = '5 oct · ' + new Date().toLocaleTimeString('es-CO',{ hour:'numeric', minute:'2-digit' });
+    this.setState(x => ({ log:[{ when, who: ROLE_USERS[x.role], mod, t }, ...x.log] })); if (toast !== false) this.say(toast || t); }
+  upd(list, id, patch, mod, msg){ this.setState(x => ({ [list]: x[list].map(r => r.id===id ? { ...r, ...patch } : r) })); if (msg) this.log(mod, msg); }
+  goMod(mod, tab){ this.setState(x => ({ mod, tabs: tab!=null ? { ...x.tabs, [mod]:tab } : x.tabs })); window.scrollTo({ top:0 }); }
+  par(key, unit){ return { isInput:true, w:'90px', ph:'', value:this.state.params[key], unit, onChange: e => { const v = e.target.value; this.setState(x => ({ params:{ ...x.params, [key]:v } })); } }; }
+  saveBtn(mod, what){ return [btn('Guardar cambios', () => this.log(mod, 'Actualizó parámetros: ' + what), 'primary')]; }
+
+  counts(){ const s = this.state;
+    return { kyc: s.kyc.filter(r => r.st==='manual').length + s.sarlaft.filter(r => r.st==='open').length + s.support.filter(r => r.st==='open').length,
+      fid: (s.cb==='approved' ? 0 : 1) + s.concil.filter(r => r.st==='diff').length, cred: s.credit.filter(r => r.st==='manual').length,
+      mkt: s.ops.filter(r => r.st==='docs').length + s.prods.filter(r => r.st==='cur').length + s.disputes.filter(r => r.st==='open').length + s.reviews.filter(r => r.st==='pending').length, mil: s.refFraud.filter(r => r.st==='open').length,
+      prom: s.proms.filter(r => r.st==='pending').length + s.fraud.filter(r => r.st==='open').length, fin: s.liq==='invoiced' ? 0 : 1, camp:0, cfg:0, ana:0 }; }
+
+  blocks(mod, tab){
+    const s = this.state, B = [];
+    if (mod==='home') { const c = this.counts(), dOpen = s.disputes.filter(d => d.st==='open').length;
+      B.push(K([['12.480','Usuarios con billetera'],[mm(2184330200),'Saldo en fiducia'],[mm(412000000),'Cartera de crédito'],[mm(186400000),'Ventas del mes (GMV)'],['18,4 M','Millas en circulación','#9B51E0']]));
+      const t = (count, title, sub, go, k) => ({ count:String(count), t:title, sub, go, bg: count ? TAG[k||'bad'][0] : TAG.ok[0], color: count ? TAG[k||'bad'][1] : TAG.ok[1] });
+      B.push({ isTasks:true, col:'1/2', title:'Pendientes por decidir', items:[
+        t(s.kyc.filter(r => r.st==='manual').length,'Verificaciones KYC en revisión manual','Usuarios y KYC', () => this.goMod('kyc',0)),
+        t(s.sarlaft.filter(r => r.st==='open').length,'Alertas SARLAFT abiertas','Riesgo', () => this.goMod('kyc',1)),
+        t(s.credit.filter(r => r.st==='manual').length,'Créditos en revisión manual','Crédito', () => this.goMod('cred',0)),
+        t(s.prods.filter(r => r.st==='cur').length,'Productos en curaduría','Marketplace', () => this.goMod('mkt',1), 'warn'),
+        t(dOpen,'Disputas abiertas','Retienen la liquidación del operador', () => this.goMod('mkt',3)),
+        t(s.reviews.filter(r => r.st==='pending').length,'Calificaciones por moderar','Marketplace · comentarios de viajeros', () => this.goMod('mkt',5), 'warn'),
+        t(s.refFraud.filter(r => r.st==='open').length,'Alertas de referidos','Millas y referidos', () => this.goMod('mil',3)),
+        t(s.proms.filter(r => r.st==='pending').length,'Promotores por aprobar','Red de promotores', () => this.goMod('prom',0), 'warn') ] });
+      B.push({ isTasks:true, col:'2/3', title:'Procesos recurrentes', items:[
+        t(s.cb==='approved' ? 0 : 1,'Mensual · Rendimientos y cashback', s.cb==='approved' ? 'Septiembre abonado a las billeteras' : 'Lote de septiembre por aprobar (Finanzas)', () => this.goMod('fid',1), 'warn'),
+        t(s.liq==='invoiced' ? 0 : 1,'Semanal · Liquidaciones', s.liq==='disputes' ? `Lunes 5 oct · ${dOpen} disputa(s) por revisar` : s.liq==='paid' ? 'Pagado · falta facturar' : 'Pagado y facturado', () => this.goMod('fin',0), 'warn'),
+        t(s.credit.filter(r => r.st==='manual').length,'Por solicitud · Crédito','Score automático + revisión manual', () => this.goMod('cred',0), 'warn') ] });
+      return B; }
+
+    if (mod==='ana') {
+      if (tab===0) {
+        B.push(K([['9.140','Usuarios activos (30 días)'],['48.620','Sesiones en la app'],['5,3','Sesiones por usuario','#0A7A43'],['6 min 40 s','Tiempo promedio por sesión','#9B51E0'],['35 min','Tiempo total por usuario al mes']]));
+        B.push(BR('Sesiones por día de la semana', [['Lunes',6100],['Martes',5800],['Miércoles',6300],['Jueves',6900],['Viernes',8700,'#0A8F4E'],['Sábado',8200,'#0A8F4E'],['Domingo',6620]].map(([l,v,c]) => [l,v,c||'#9FD8B8',v.toLocaleString('es-CO') + ' sesiones']), '1/2'));
+        B.push(BR('Tiempo promedio por sección', [['Explorar · mapa',150,'#0A8F4E','2 min 30 s'],['Inicio',95,'#0A8F4E','1 min 35 s'],['Ahorrar y metas',80,'#9B51E0','1 min 20 s'],['Detalle de paquete',70,'#9B51E0','1 min 10 s'],['Mis viajes',35,'#FFD700','35 s'],['Perfil y referidos',20,'#FFD700','20 s']], '2/3'));
+        B.push(BR('Frecuencia de uso', [['1 vez al mes',2010,'#c9ccd6','22%'],['2 a 4 veces',3290,'#9FD8B8','36%'],['5 a 10 veces',2560,'#0A8F4E','28%'],['Más de 10 veces',1280,'#062A1C','14%']]));
+        B.push(N('Una sesión cuenta cada vez que el usuario abre la app tras 30 minutos sin usarla. El tiempo se mide con la app en primer plano.','muted')); }
+      if (tab===1) {
+        B.push(K([['62%','Colombia'],['38%','Exterior','#9B51E0'],['71%','Visitan desde Cartagena (GPS)','#0A7A43'],['24%','Llegaron por un código de referido o promotor']]));
+        B.push(BR('Ciudad desde donde nos visitan', [['Bogotá',3120,'#0A8F4E','34%'],['Medellín',1460,'#0A8F4E','16%'],['Cartagena',1100,'#0A8F4E','12%'],['Miami',820,'#9B51E0','9%'],['Madrid',640,'#9B51E0','7%'],['Ciudad de México',550,'#9B51E0','6%'],['Otras',1450,'#c9ccd6','16%']], '1/2'));
+        B.push(BR('Cómo llegaron a Viatto', [['Búsqueda en tienda de apps',2930,'#062A1C','32%'],['Código de referido de un amigo',1280,'#9B51E0','14%'],['QR o código de un promotor',920,'#7A35BD','10%'],['Link compartido de un plan',1460,'#0A8F4E','16%'],['Redes sociales',1830,'#FFD700','20%'],['Otros',720,'#c9ccd6','8%']], '2/3'));
+        B.push(T('Dispositivos','1.4fr 1fr 1fr 1fr',['Plataforma','Usuarios','Sesiones','Tiempo promedio'], [['iPhone (iOS)','5.210','29.400','7 min 10 s'],['Android','3.930','19.220','5 min 50 s']].map(([p,u,s2,tm]) => ({ cells:[bx(p), tx(u), tx(s2), tx(tm)], btns:[] })), { minW:'560px' })); }
+      if (tab===2) { const U = [['David Restrepo','Bogotá · iPhone',23,'8 min 10 s','Hoy · 9:41 a.m.'],['Laura Gómez','Medellín · Android',41,'6 min 05 s','Hoy · 8:12 a.m.'],['Juan Pérez','Cartagena · Android',67,'3 min 40 s','Hoy · 7:30 a.m.'],['Ana Martínez','Miami · iPhone',12,'11 min 20 s','Ayer · 10:05 p.m.'],['Carlos Rojas','Bogotá · Android',4,'2 min 15 s','28 sep'],['Lorena Díaz','Madrid · iPhone',9,'5 min 30 s','2 oct']];
+        B.push(T('Uso por usuario · últimos 30 días','1.3fr 1.3fr 100px 1fr 1fr',['Usuario','Desde','Ingresos','Tiempo promedio','Última visita'], U.map(([n,from,ses,tm,last]) => ({
+          cells:[bx(n), tx(from), tag(String(ses), ses>=20 ? 'ok' : ses>=8 ? 'info' : 'muted'), tx(tm), tx(last)], btns:[] })), { minW:'640px' }));
+        B.push(N('Los usuarios con más de 20 ingresos al mes son candidatos para campañas de referidos; los de menos de 5, para recordatorios de ahorro.','info')); } }
+
+    if (mod==='kyc') {
+      if (tab===0) { const L = s.kyc;
+        B.push(K([[String(L.filter(r => r.st==='manual').length),'En revisión manual', '#0A7A43'],['84%','Aprobación automática (Truora)'],['3 min','Tiempo medio de verificación'],['146','Verificados esta semana']]));
+        B.push(T('Cola de verificación · Truora','1.4fr 1fr 110px 1.5fr 130px',['Usuario','Tipo','Score','Motivo de revisión','Estado'], L.map(r => ({
+          cells:[bx(r.name, r.doc), tx(r.type), tag(String(r.score), r.score>=80 ? 'ok' : r.score>=60 ? 'warn' : 'bad'), tx(r.reason), r.st==='manual' ? tag('Revisión manual','warn') : r.st==='ok' ? tag('Aprobado','ok') : r.st==='doc' ? tag('Doc. solicitado','info') : tag('Rechazado','muted')],
+          btns: r.st==='manual' ? [btn('Aprobar', () => this.upd('kyc', r.id, { st:'ok' }, 'KYC', `Aprobó KYC de ${r.name}`), 'ok'), btn('Pedir doc.', () => this.upd('kyc', r.id, { st:'doc' }, 'KYC', `Pidió nuevo documento a ${r.name}`)), btn('Rechazar', () => this.upd('kyc', r.id, { st:'rej' }, 'KYC', `Rechazó KYC de ${r.name}`), 'warn')] : [] })), { actW:'250px', minW:'980px' })); }
+      if (tab===1) {
+        B.push(N('Las coincidencias se revisan antes de 24 h. Si se confirma una operación sospechosa, se reporta a la UIAF (ROS) y se bloquea la billetera.','warn'));
+        B.push(T('Alertas SARLAFT y listas restrictivas','90px 1.2fr 1.8fr 90px 130px',['Alerta','Titular','Tipo','Riesgo','Estado'], s.sarlaft.map(r => ({
+          cells:[bx(r.id), tx(r.name), tx(r.kind), tag(r.sev, r.sev==='Alta' ? 'bad' : 'warn'), r.st==='open' ? tag('Abierta','bad') : r.st==='ros' ? tag('ROS enviado','info') : r.st==='blocked' ? tag('Bloqueado','muted') : tag('Falso positivo','ok')],
+          btns: r.st==='open' ? [btn('Falso positivo', () => this.upd('sarlaft', r.id, { st:'closed' }, 'KYC', `Descartó ${r.id} como falso positivo`)), btn('Reportar ROS', () => this.upd('sarlaft', r.id, { st:'ros' }, 'KYC', `Reportó ${r.id} a la UIAF`), 'warn'), btn('Bloquear', () => this.upd('sarlaft', r.id, { st:'blocked' }, 'KYC', `Bloqueó la billetera de ${r.name}`), 'dark')] : [] })), { actW:'300px', minW:'1020px' })); }
+      if (tab===2) {
+        B.push(T('Bloqueos y soporte','80px 1fr 1.8fr 100px 110px',['Caso','Usuario','Motivo','Canal','Estado'], s.support.map(r => ({
+          cells:[bx(r.id), tx(r.name), tx(r.reason), tx(r.ch), r.st==='open' ? tag('Abierto','warn') : tag('Resuelto','ok')],
+          btns: r.st==='open' ? [ ...(r.otp ? [btn('Reenviar OTP al correo', () => this.upd('support', r.id, { st:'done' }, 'KYC', `Reenvió el código OTP al correo de ${r.name}`), 'primary')] : []), ...(r.block ? [btn('Desbloquear', () => this.upd('support', r.id, { st:'done' }, 'KYC', `Desbloqueó la cuenta de ${r.name}`), 'ok')] : []), btn('Marcar resuelto', () => this.upd('support', r.id, { st:'done' }, 'KYC', `Resolvió el caso ${r.id}`))] : [] })), { actW:'240px', minW:'900px' })); } }
+
+    if (mod==='fid') {
+      if (tab===0) { const today = s.concil[0], diffs = s.concil.filter(r => r.st==='diff');
+        B.push(K([[mm(today.w),'Saldo en billeteras'],[mm(today.f),'Saldo en encargo fiduciario'],[cop(today.w-today.f),'Diferencia hoy', today.w===today.f ? '#2E6A4E' : '#0A7A43'],[String(diffs.length),'Días con diferencia por revisar', diffs.length ? '#0A7A43' : '#2E6A4E']]));
+        B.push(T('Conciliación diaria · billetera vs. encargo','100px 1fr 1fr 1fr 140px',['Fecha','Billeteras','Fiducia','Diferencia','Estado'], s.concil.map((r,i) => ({
+          cells:[bx(r.d), tx(cop(r.w)), tx(cop(r.f)), tx(cop(r.w-r.f)), r.st==='diff' ? tag('Diferencia · revisión','bad') : r.st==='fixed' ? tag('Resuelta','info') : tag('Cuadrado','ok')],
+          btns: r.st==='diff' ? [btn('Marcar resuelta', () => { this.setState(x => ({ concil: x.concil.map((c,j) => j===i ? { ...c, st:'fixed', f:c.w } : c) })); this.log('Fiducia', `Resolvió la diferencia del ${r.d}: recarga PSE abonada tarde por la fiducia`); }, 'primary')] : [] })), { actW:'150px', minW:'820px' })); }
+      if (tab===1) { const ap = s.cb==='approved', adj = s.cb==='adjust';
+        B.push(P('Proceso mensual · Rendimientos de septiembre', ap ? 'Lote aprobado y abonado el 5 oct.' : adj ? 'Ajuste solicitado: recalcula antes de volver a aprobar.' : 'Día 1: la fiducia reportó el rendimiento. Falta la aprobación de Finanzas.', [
+          ['Día 1 · Fiducia','Reporte de rendimiento','$18.420.000 de rendimiento del encargo en septiembre.','done'],
+          ['Sistema','Conciliación','Saldo en billeteras = saldo en fiducia. Sin diferencias abiertas.','done'],
+          ['Sistema','Cálculo por usuario','Sobre saldo promedio diario. ' + s.params.cbUser + '% usuario, ' + (100-Number(s.params.cbUser)) + '% Viatto.', adj ? 'cur' : 'done'],
+          ['Decisión · Finanzas','¿Aprueba el lote?','Sí → abonar. No → ajustar y recalcular.', ap ? 'done' : adj ? 'todo' : 'cur'],
+          ['Dinero','Abono de cashback','A cada billetera + aviso «Ganaste $X este mes».', ap ? 'done' : 'todo'] ],
+          ap ? [] : adj ? [btn('Recalcular lote', () => { this.setState({ cb:'pending' }); this.log('Fiducia','Recalculó el lote de cashback de septiembre'); }, 'primary')]
+            : [btn('No → ajustar', () => { this.setState({ cb:'adjust' }); this.log('Fiducia','Pidió ajustar el lote de cashback de septiembre'); }, 'warn'), btn('Aprobar lote', () => { this.setState({ cb:'approved' }); this.log('Fiducia','Aprobó el lote de cashback: $9.210.000 a 12.480 billeteras'); }, 'ok')]));
+        const pu = Number(s.params.cbUser)/100;
+        B.push(K([[mm(18420000),'Rendimiento del encargo'],['10,2% E.A.','Tasa del mes'],[mm(18420000*pu),'Para usuarios (' + s.params.cbUser + '%)', '#2E6A4E'],[mm(18420000*(1-pu)),'Para Viatto']]));
+        B.push(T('Vista previa del lote · 12.480 billeteras','1.3fr 1fr 1fr 1fr 130px',['Usuario','Saldo promedio','Rendimiento','Cashback','Estado'],
+          [['Laura León',4200000],['Ana Martínez',2650000],['Carlos Rojas',1980000],['Sofía Gómez',860000]].map(([n,bal]) => { const y = bal*0.0084; return { cells:[bx(n), tx(cop(bal)), tx(cop(y)), bx(cop(y*pu)), ap ? tag('Abonado','ok') : tag('En lote','muted')], btns:[] }; }), { minW:'760px' })); } }
+
+    if (mod==='cred') {
+      if (tab===0) {
+        B.push(P('Proceso por solicitud · Crédito del 50% restante','Score automático primero. Solo los casos dudosos pasan a revisión manual.', [
+          ['Entrada','Solicitud','Viajero con ' + s.params.ahorroMin + '% ahorrado y KYC completo.','done'],['Motor','Score automático','Truora + buró + comportamiento de ahorro.','done'],
+          ['Decisión','Política','≥ ' + s.params.scoreAuto + ' aprobar · ' + s.params.scoreMan + '–' + (Number(s.params.scoreAuto)-1) + ' manual · < ' + s.params.scoreMan + ' rechazar.','cur'],
+          ['Dinero','Desembolso al operador','Nunca a la billetera del viajero.','todo'],['Cartera','Seguimiento','Cuotas, mora, recordatorios y cobranza.','todo'] ]));
+        B.push(T('Solicitudes de crédito','90px 1.2fr 1.4fr 1fr 80px 110px 160px',['Solicitud','Viajero','Paquete','Crédito','Score','Motor','Estado'], s.credit.map(r => ({
+          cells:[bx(r.id), tx(r.name), tx(r.pkg, 'Total ' + cop(r.total) + ' · ahorró ' + cop(r.saved)), bx(cop(r.total-r.saved)), tx(String(r.score)), tag(r.rec, r.rec==='Aprobar' ? 'ok' : r.rec==='Manual' ? 'warn' : 'bad'),
+            r.st==='disb' ? tag('Desembolsado al operador','ok') : r.st==='manual' ? tag('Revisión manual','warn') : tag('Rechazado','muted')],
+          btns: r.st==='manual' ? [btn('Aprobar', () => this.upd('credit', r.id, { st:'disb' }, 'Crédito', `Aprobó ${r.id} y desembolsó ${cop(r.total-r.saved)} al operador`), 'ok'), btn('Rechazar', () => this.upd('credit', r.id, { st:'rej' }, 'Crédito', `Rechazó ${r.id}`), 'warn')] : [] })), { actW:'180px', minW:'1100px' })); }
+      if (tab===1) {
+        B.push(T('Políticas y reglas de score','1.6fr 1.6fr 1fr',['Regla','Descripción','Valor'], [
+          ['scoreAuto','Aprobación automática','Score igual o mayor','pts'],['scoreMan','Revisión manual desde','Por debajo se rechaza','pts'],['ahorroMin','Ahorro mínimo','Del valor del paquete','%'],
+          ['credMax','Monto máximo','Por viajero','COP'],['plazo','Plazo máximo','En cuotas mensuales','meses'],['tasa','Tasa de interés','Efectiva mensual','% E.M.'] ]
+          .map(([k,l,d,u]) => ({ cells:[bx(l), tx(d), this.par(k,u)], btns:[] })), { actions: this.saveBtn('Crédito','políticas de crédito'), minW:'640px' })); }
+      if (tab===2) {
+        B.push(K([[mm(412000000),'Cartera vigente'],['318','Créditos activos'],['2,4%','Mora > 30 días','#0A7A43'],['96%','Recaudo del mes','#2E6A4E']]));
+        B.push(T('Mora y cobranza','90px 1.2fr 1fr 80px 1.4fr 120px',['Crédito','Cliente','Saldo','Días','Última gestión','Estado'], s.mora.map(r => ({
+          cells:[bx(r.id), tx(r.name), tx(cop(r.saldo)), tag(String(r.dias), r.dias>30 ? 'bad' : 'warn'), tx(r.last), r.st==='cobranza' ? tag('En cobranza','info') : tag('En mora','warn')],
+          btns: r.st==='mora' ? [btn('Recordatorio', () => this.upd('mora', r.id, { last:'Recordatorio WhatsApp · hoy' }, 'Crédito', `Envió recordatorio a ${r.name}`)), btn('Pasar a cobranza', () => this.upd('mora', r.id, { st:'cobranza' }, 'Crédito', `Pasó ${r.id} a cobranza`), 'warn')] : [] })), { actW:'240px', minW:'1000px' })); } }
+
+    if (mod==='mkt') {
+      if (tab===0) {
+        B.push(T('Alta de operadores','1.5fr 130px 1fr 150px',['Operador','NIT','Categoría','Estado'], s.ops.map(r => ({
+          cells:[bx(r.name), tx(r.nit), tx(r.cat), r.st==='docs' ? tag('Docs. en revisión','warn') : r.st==='contract' ? tag('Contrato pendiente','info') : r.st==='returned' ? tag('Devuelto · falta info','bad') : tag('Activo','ok')],
+          btns: r.st==='docs' ? [btn('Verificado → contrato', () => this.upd('ops', r.id, { st:'contract' }, 'Marketplace', `Verificó a ${r.name} y envió contrato`), 'ok'), btn('Falta info', () => this.upd('ops', r.id, { st:'returned' }, 'Marketplace', `Devolvió la solicitud de ${r.name}`), 'warn')]
+            : r.st==='contract' ? [btn('Reenviar contrato', () => this.log('Marketplace', `Reenvió contrato a ${r.name}`))] : [] })), { actW:'280px', minW:'960px' })); }
+      if (tab===1) {
+        B.push(T('Curaduría de productos','1.4fr 1.1fr 1fr 140px',['Producto','Operador','Precio','Estado'], s.prods.map(r => ({
+          cells:[bx(r.title), tx(r.op), tx(cop(r.price)), r.st==='cur' ? tag('En curaduría','warn') : r.st==='pub' ? tag('Publicado','ok') : tag('Ajustes pedidos','bad')],
+          btns: r.st==='cur' ? [btn('Publicar', () => this.upd('prods', r.id, { st:'pub' }, 'Marketplace', `Publicó «${r.title}» en Explorar, Mapa, guía IA y promotores`), 'ok'), btn('Pedir ajustes', () => this.upd('prods', r.id, { st:'adj' }, 'Marketplace', `Pidió ajustes a «${r.title}»`), 'warn')] : [] })), { actW:'220px', minW:'880px' })); }
+      if (tab===2) {
+        B.push(T('Comisión Viatto por categoría','1.4fr 1.6fr 1fr',['Categoría','Aplica a','Comisión'], [['c_islas','Islas y náutica','Lanchas, veleros, islas'],['c_ciudad','Tours en ciudad','Recorridos, chivas, guías'],['c_hotel','Hoteles','Noches de alojamiento'],['c_trans','Transporte','Traslados'],['c_gastro','Gastronomía','Experiencias y restaurantes']]
+          .map(([k,l,d]) => ({ cells:[bx(l), tx(d), this.par(k,'%')], btns:[] })), { actions: this.saveBtn('Marketplace','comisión por categoría'), minW:'600px' }));
+        B.push(N('El acuerdo comercial fija la comisión entre 5% y 15%. Un cambio aplica a reservas nuevas, no a las ya pagadas.','muted')); }
+      if (tab===3) {
+        B.push(N('Una disputa abierta retiene la liquidación de ese operador en el proceso semanal.','warn'));
+        B.push(T('Disputas y reembolsos','80px 90px 1fr 1fr 1.5fr 1fr 120px',['Caso','Reserva','Viajero','Operador','Motivo','Monto','Estado'], s.disputes.map(r => ({
+          cells:[bx(r.id), tx(r.bk), tx(r.who), tx(r.op), tx(r.reason), tx(cop(r.amount)), r.st==='open' ? tag('Abierta','bad') : tag(r.st,'ok')],
+          btns: r.st==='open' ? [btn('Reembolso 100%', () => this.upd('disputes', r.id, { st:'Reembolso total' }, 'Marketplace', `Resolvió ${r.id}: reembolso total de ${cop(r.amount)}`), 'primary'), btn('Parcial 50%', () => this.upd('disputes', r.id, { st:'Reembolso 50%' }, 'Marketplace', `Resolvió ${r.id}: reembolso de ${cop(r.amount/2)}`)), btn('Rechazar', () => this.upd('disputes', r.id, { st:'Rechazada' }, 'Marketplace', `Rechazó la disputa ${r.id}`), 'warn')] : [] })), { actW:'300px', minW:'1180px' })); }
+      if (tab===4) {
+        B.push(K([['1.126','Próximos viajes (pagados)','#0A8F4E'],['3.402','Viajes realizados'],['61%','Realizados con calificación'],['2,1%','Cancelados']]));
+        B.push(T('Reservas de los viajeros','100px 1.2fr 1.4fr 1fr 130px 1fr 150px',['Reserva','Viajero','Experiencia','Fecha','Personas','Total','Estado'], [
+          ['VT-48731','David Restrepo','Tour 5 Islas','Sáb 10 oct','2',640000,'up'],['VT-48760','David Restrepo','Museo de la Esmeralda','Sáb 17 oct','2',80000,'up'],
+          ['VT-48213','Laura León','Tour Bahía de Cartagena','14 sep','2',220000,'done'],['VT-47120','Ana Martínez','City tour Ciudad Amurallada','22 ago','2',300000,'done'],['VT-46022','Carlos Rojas','Día en Islas del Rosario','2 ago','2',760000,'can'] ].map(([id,who,p,d,n,tot,st]) => ({
+          cells:[bx(id), tx(who), tx(p), tx(d), tx(n), tx(cop(tot)), st==='up' ? tag('Pagado · por realizar','ok') : st==='done' ? tag('Realizado','muted') : tag('Cancelado · reembolsado','bad')],
+          btns:[btn('Ver voucher QR', () => this.say('Voucher ' + id))] })), { actW:'130px', minW:'1080px' }));
+        B.push(N('El viajero ve sus reservas en Mis viajes: próximas (verde), realizadas (gris, con botón para calificar) y canceladas. El QR del voucher es el que escanea el operador en el check-in.','muted')); }
+      if (tab===5) { const rv = s.reviews;
+        B.push(K([['4,6 ★','Calificación promedio','#0A7A43'],[String(rv.filter(r => r.st==='pending').length),'Por moderar','#6b4708'],['2.074','Calificaciones publicadas'],['150','Caracteres máximos por comentario']]));
+        B.push(T('Calificaciones de viajes realizados','90px 1fr 1.3fr 1fr 90px 2fr 120px',['ID','Viajero','Experiencia','Operador','Estrellas','Comentario','Estado'], rv.map(r => ({
+          cells:[bx(r.id), tx(r.who), tx(r.prod), tx(r.op), tag('★'.repeat(r.stars), r.stars>=4 ? 'ok' : r.stars>=3 ? 'warn' : 'bad'), tx('«' + r.c + '»'), r.st==='pending' ? tag('Por moderar','warn') : r.st==='pub' ? tag('Publicada','ok') : tag('Oculta','muted')],
+          btns: r.st==='pending' ? [btn('Publicar', () => this.upd('reviews', r.id, { st:'pub' }, 'Marketplace', `Publicó la calificación ${r.id} de ${r.prod}`), 'ok'), btn('Ocultar', () => this.upd('reviews', r.id, { st:'hid' }, 'Marketplace', `Ocultó la calificación ${r.id}`), 'warn')] : [] })), { actW:'190px', minW:'1200px' }));
+        B.push(N('Las calificaciones de 1–2 estrellas se envían al operador para que responda. Se ocultan solo si incumplen las normas (datos personales, insultos o publicidad).','info')); } }
+
+    if (mod==='mil') {
+      if (tab===0) {
+        B.push(K([['18,4 M','Millas en circulación','#9B51E0'],[mm(18400000*Number(s.params.milValue)),'Pasivo equivalente'],['2,1 M','Millas emitidas en septiembre'],['640 mil','Millas redimidas en septiembre']]));
+        B.push(BR('Millas emitidas por origen · septiembre', [['Aportes a metas',1480000,'#9B51E0','1,48 M'],['Referidos',412000,'#7A35BD','412 mil'],['Calificaciones',168000,'#B98AEB','168 mil'],['Campañas',40000,'#D9C2F4','40 mil']]));
+        B.push(T('Últimos movimientos de millas','120px 1.2fr 1.6fr 110px 130px',['Fecha','Usuario','Motivo','Millas','Tipo'], s.milMoves.map(([d,u,m,n,k]) => ({
+          cells:[tx(d), bx(u), tx(m), tag((n>0?'+':'') + n.toLocaleString('es-CO'), n>0 ? 'info' : 'muted'), k.startsWith('Ajuste') ? tag(k,'warn') : tx(k)], btns:[] })), { minW:'820px' })); }
+      if (tab===1) { const q = s.milQ.trim().toLowerCase(), A = s.milAdj;
+        const list = s.milUsers.filter(u => !q || (u.name + ' ' + u.mail + ' ' + u.code + ' ' + u.id).toLowerCase().includes(q));
+        const setA = (id, k) => e => { const v = k==='n' ? e.target.value.replace(/\D/g,'') : e.target.value.slice(0,80); this.setState(x => ({ milAdj:{ ...x.milAdj, [id]:{ ...(x.milAdj[id]||{}), [k]:v } } })); };
+        const apply = (u, sign) => { const a = A[u.id] || {}, n = parseInt(a.n||'0',10), why = (a.r||'').trim();
+          if (!n) { this.say('Escribe cuántas millas'); return; } if (!why) { this.say('Escribe el motivo del ajuste'); return; }
+          if (sign<0 && n>u.bal) { this.say(u.name + ' solo tiene ' + u.bal.toLocaleString('es-CO') + ' millas'); return; }
+          const d = sign*n;
+          this.setState(x => ({ milUsers: x.milUsers.map(v => v.id===u.id ? { ...v, bal: v.bal + d } : v), milAdj:{ ...x.milAdj, [u.id]:{ n:'', r:'' } },
+            milMoves:[[ '5 oct', u.name, why, d, sign>0 ? 'Ajuste manual +' : 'Ajuste manual −' ], ...x.milMoves] }));
+          this.log('Millas', (sign>0 ? 'Añadió ' : 'Quitó ') + n.toLocaleString('es-CO') + ' millas a ' + u.name + ' · ' + why); };
+        B.push(N('Busca al usuario, escribe la cantidad y el motivo, y toca Añadir o Quitar. Cada ajuste queda en los movimientos de millas, en la bitácora y le llega al usuario como notificación.','info'));
+        B.push({ isSearch:true, col:'1/-1', ph:'Buscar por nombre, correo, código o ID', value:s.milQ, count: list.length + ' de ' + s.milUsers.length + ' usuarios', onChange: e => this.setState({ milQ:e.target.value }) });
+        B.push({ isUsers:true, col:'1/-1', title:'Usuarios', rows: list.map(u => { const a2 = A[u.id] || {};
+          return { name:u.name, sub:u.mail + ' · ' + u.code + ' · ' + u.id, bal:u.bal.toLocaleString('es-CO'), n:a2.n||'', r:a2.r||'', onN:setA(u.id,'n'), onR:setA(u.id,'r'), add: () => apply(u, 1), sub2: () => apply(u, -1) }; }) }); }
+      if (tab===2) {
+        B.push(T('Reglas de acumulación y redención','1.6fr 1.8fr 1fr',['Regla','Descripción','Valor'], [['milAporte','Por aportes a metas','Millas por cada $10.000 aportados','millas'],['milRate','Por calificar un viaje','Al enviar la calificación de un viaje realizado','millas'],['milRefReg','Referido se registra','Para quien invitó, cuando el invitado crea su cuenta','millas'],['milRefFirst','Referido hace su primer aporte','Para quien invitó','millas'],['milValue','Valor de la milla','Al redimir en experiencias','COP'],['milMin','Mínimo para redimir','Saldo mínimo de millas','millas'],['milExp','Vencimiento','Desde que se ganan','meses']]
+          .map(([k,l,d,u]) => ({ cells:[bx(l), tx(d), this.par(k,u)], btns:[] })), { actions: this.saveBtn('Millas','reglas de millas'), minW:'640px' }));
+        B.push(N('El invitado no gana millas por usar un código de referido; solo quien invita. El cashback de la fiducia es aparte y se paga en pesos.','info')); }
+      if (tab===3) {
+        B.push(K([['1.240','Registros con código este mes'],['38%','Hicieron su primer aporte','#2E6A4E'],['412 mil','Millas pagadas por referidos','#9B51E0'],['DAVID-CTG','Formato del código','#455073']]));
+        B.push(T('Top de usuarios que refieren','1.3fr 130px 110px 110px 130px',['Usuario','Código','Invitados','Con aporte','Millas ganadas'], [['David Restrepo','DAVID-CTG',5,2,1800],['Laura Gómez','LAURA-CTG',12,7,5900],['Daniel Ríos','DANIEL-CTG',4,1,1300]].map(([n,c,i,a,m]) => ({ cells:[bx(n), tx(c), tx(String(i)), tx(String(a)), tag('+' + m.toLocaleString('es-CO'),'info')], btns:[] })), { minW:'700px' }));
+        B.push(T('Alertas de abuso de referidos','80px 120px 2fr 120px',['Alerta','Código','Señal','Estado'], s.refFraud.map(r => ({
+          cells:[bx(r.id), tx(r.who), tx(r.signal), r.st==='open' ? tag('Abierta','bad') : r.st==='rev' ? tag('Millas revertidas','muted') : tag('Descartada','ok')],
+          btns: r.st==='open' ? [btn('Revertir millas', () => this.upd('refFraud', r.id, { st:'rev' }, 'Millas', `Revirtió las millas de ${r.who}`), 'dark'), btn('Descartar', () => this.upd('refFraud', r.id, { st:'ok' }, 'Millas', `Descartó la alerta ${r.id}`))] : [] })), { actW:'220px', minW:'820px' }));
+        B.push(N('El código de referido se ingresa (opcional) al final del registro. Si el código es de un promotor (ej. JUAN-CTG), el viajero queda atribuido a ese promotor en vez de sumar millas a un amigo.','muted')); } }
+
+    if (mod==='prom') {
+      if (tab===0) {
+        B.push(T('Aprobación de promotores','80px 1.1fr 1.3fr 1fr 1fr 120px',['ID','Nombre','Tipo','Zona','Antecedentes','Estado'], s.proms.map(r => ({
+          cells:[bx(r.id), tx(r.name, 'KYC Truora ✓'), tx(r.type), tx(r.zona), tag(r.ant, r.ant==='Sin hallazgos' ? 'ok' : 'warn'), r.st==='pending' ? tag('Por aprobar','warn') : r.st==='ok' ? tag('Activo','ok') : tag('Rechazado','muted')],
+          btns: r.st==='pending' ? [btn('Aprobar', () => this.upd('proms', r.id, { st:'ok' }, 'Promotores', `Aprobó al promotor ${r.name}`), 'ok'), btn('Rechazar', () => this.upd('proms', r.id, { st:'rej' }, 'Promotores', `Rechazó al promotor ${r.name}`), 'warn')] : [] })), { actW:'180px', minW:'1000px' })); }
+      if (tab===1) {
+        B.push(T('Reglas de atribución y residual','1.6fr 1.8fr 1fr',['Regla','Descripción','Valor'], [['attrWin','Ventana de atribución','El viajero queda ligado al promotor','meses'],['residual','Residual','Sobre compras posteriores del viajero','%'],['promMax','Comisión máxima al promotor','Tope que puede fijar un operador','%']]
+          .map(([k,l,d,u]) => ({ cells:[bx(l), tx(d), this.par(k,u)], btns:[] })), { actions: this.saveBtn('Promotores','reglas de atribución'), minW:'640px' }));
+        B.push(N('Conflicto: si dos promotores reclaman al mismo viajero, gana el primer QR o link usado. La venta asistida le da la comisión de esa venta al segundo promotor, pero no el residual.','info')); }
+      if (tab===2) {
+        B.push(T('Detección de fraude','70px 120px 2fr 90px 120px',['Alerta','Promotor','Señal','Riesgo','Estado'], s.fraud.map(r => ({
+          cells:[bx(r.id), tx(r.who), tx(r.signal), tag(r.risk, r.risk==='Alta' ? 'bad' : 'warn'), r.st==='open' ? tag('Abierta','bad') : r.st==='susp' ? tag('Suspendido','muted') : tag('Descartada','ok')],
+          btns: r.st==='open' ? [btn('Suspender', () => this.upd('fraud', r.id, { st:'susp' }, 'Promotores', `Suspendió a ${r.who} y retuvo sus comisiones`), 'dark'), btn('Descartar', () => this.upd('fraud', r.id, { st:'ok' }, 'Promotores', `Descartó la alerta ${r.id}`))] : [] })), { actW:'200px', minW:'900px' })); } }
+
+    if (mod==='fin') {
+      if (tab===0) { const dispOpen = op => s.disputes.some(d => d.op===op && d.st==='open');
+        const OPS = [['Náutica Bahía',7,5320000,10],['Velas del Caribe',4,2080000,10],['Heroica Tours',9,1620000,12],['Sabores de la Heroica',5,750000,15]];
+        const anyDisp = OPS.some(o => dispOpen(o[0])), L = s.liq;
+        B.push(P('Proceso semanal · Liquidación del lunes 5 oct', L==='invoiced' ? 'Pagado y facturado.' : L==='paid' ? 'Pagos enviados. Falta emitir las facturas de comisión.' : anyDisp ? 'Hay disputas abiertas: esos operadores quedan retenidos.' : 'Sin disputas abiertas. Listo para pagar.', [
+          ['Sistema','Servicios prestados','25 reservas con check-in confirmado en la semana.','done'],['Sistema','Cálculo','Precio − comisión Viatto − comisión del promotor.','done'],
+          ['Decisión · Finanzas','¿Disputas abiertas?','No → pagar. Sí → retener a ese operador.', L==='disputes' ? 'cur' : 'done'],
+          ['Dinero','Pagos','A operadores (cuenta bancaria) y promotores (billetera).', L==='disputes' ? 'todo' : 'done'],
+          ['Finanzas','Facturación','Factura electrónica de las comisiones.', L==='invoiced' ? 'done' : L==='paid' ? 'cur' : 'todo'] ],
+          L==='disputes' ? [btn(anyDisp ? 'Pagar lote (retener disputas)' : 'Pagar lote', () => { this.setState({ liq:'paid' }); this.log('Finanzas', 'Pagó la liquidación semanal' + (anyDisp ? ' reteniendo operadores con disputa' : '')); }, 'ok')]
+            : L==='paid' ? [btn('Emitir facturas DIAN', () => { this.setState({ liq:'invoiced' }); this.log('Finanzas','Emitió 4 facturas electrónicas de comisión'); }, 'primary')] : []));
+        let tp = 0; const rows = OPS.map(([op,n,g,pct]) => { const ta = g*pct/100, pr = g*.08, net = g-ta-pr, hold = dispOpen(op); tp += pr;
+          return { cells:[bx(op), tx(String(n)), tx(cop(g)), tx('− ' + cop(ta)), tx('− ' + cop(pr)), bx(cop(net)), hold ? tag('Retenido · disputa','bad') : L==='disputes' ? tag('Listo para pagar','info') : tag('Pagado','ok')], btns: hold ? [btn('Ver disputa', () => this.goMod('mkt',3))] : [] }; });
+        rows.push({ cells:[bx('Promotores · 86', 'A su billetera Viatto'), tx('—'), tx('—'), tx('—'), tx('—'), bx(cop(tp)), L==='disputes' ? tag('Listo para pagar','info') : tag('Pagado','ok')], btns:[] });
+        B.push(T('Detalle del lote','1.4fr 70px 1fr 1fr 1fr 1fr 150px',['Beneficiario','Reservas','Bruto','Viatto','Promotor','Neto','Estado'], rows, { actW:'110px', minW:'1000px' })); }
+      if (tab===1) { const inv = [['FE-TA-0912','Náutica Bahía S.A.S.','Septiembre',758000],['FE-TA-0913','Velas del Caribe S.A.S.','Septiembre',412000],['FE-TA-0914','Heroica Tours','Septiembre',298000]];
+        if (s.liq==='invoiced') inv.unshift(['FE-TA-0931','Náutica Bahía S.A.S.','Semana 28 sep – 4 oct',532000],['FE-TA-0932','Velas del Caribe S.A.S.','Semana 28 sep – 4 oct',208000]);
+        B.push(T('Factura electrónica DIAN · comisiones','120px 1.4fr 1.2fr 1fr 1fr 1fr 110px',['Factura','Operador','Periodo','Base','IVA 19%','Total','DIAN'], inv.map(([no,op,per,base]) => ({
+          cells:[bx(no), tx(op), tx(per), tx(cop(base)), tx(cop(base*.19)), bx(cop(base*1.19)), tag('Validada','ok')], btns:[btn('PDF', () => this.say('Descargando ' + no))] })), { actW:'70px', minW:'1000px' })); }
+      if (tab===2) {
+        B.push(K([[mm(57100000),'Ingresos de septiembre'],['+18%','vs. agosto','#2E6A4E'],['4','Motores de ingreso']]));
+        B.push(BR('Ingresos por motor · septiembre', [['Comisión marketplace',38400000,'#0A8F4E'],['Rendimientos de fiducia (50%)',9210000,'#062A1C'],['Intereses de crédito',7400000,'#455073'],['Campañas y destacados',2090000,'#0A7A43']])); } }
+
+    if (mod==='camp') {
+      if (tab===0) {
+        B.push(T('Push geolocalizado · Cartagena','1.1fr 1.7fr 1.5fr 110px 100px',['Campaña','Mensaje','Segmento','Alcance','Estado'], s.camps.map(r => ({
+          cells:[bx(r.name, r.id), tx('«' + r.msg + '»'), tx(r.seg), tx(r.reach), r.on ? tag('Activa','ok') : tag('Pausada','muted')],
+          btns:[btn(r.on ? 'Pausar' : 'Activar', () => this.upd('camps', r.id, { on:!r.on }, 'Campañas', `${r.on ? 'Pausó' : 'Activó'} la campaña ${r.id}`), r.on ? 'ghost' : 'primary')] })), { actW:'90px', minW:'1000px' })); }
+      if (tab===1) {
+        B.push(T('Notificaciones automáticas de la app','1.4fr 1.6fr 1.2fr 100px',['Notificación','Se envía','Canal','Estado'], s.notifs.map(r => ({
+          cells:[bx(r.name), tx(r.trig), tx(r.ch), r.on ? tag('Activa','ok') : tag('Apagada','muted')],
+          btns:[btn(r.on ? 'Apagar' : 'Activar', () => this.upd('notifs', r.id, { on:!r.on }, 'Campañas', `${r.on ? 'Apagó' : 'Activó'} la notificación «${r.name}»`), r.on ? 'ghost' : 'primary')] })), { actW:'90px', minW:'860px' }));
+        B.push(N('Todas quedan en la bandeja de Notificaciones de la app (campana del Inicio) y se marcan como leídas al abrirlas.','muted')); }
+      if (tab===2) {
+        B.push(T('Banners de Ofertas · Inicio de la app','130px 1.4fr 1.2fr 1fr 100px',['Etiqueta','Plan','Ubicación','Vigencia','Estado'], s.banners.map(r => ({
+          cells:[tag(r.tag,'info'), bx(r.t), tx(r.place), tx(r.until), r.on ? tag('Activo','ok') : tag('Pausado','muted')],
+          btns:[btn(r.on ? 'Pausar' : 'Activar', () => this.upd('banners', r.id, { on:!r.on }, 'Campañas', `${r.on ? 'Pausó' : 'Activó'} el banner ${r.id}`), r.on ? 'ghost' : 'primary')] })), { actW:'90px', minW:'860px' }));
+        B.push(T('Experiencias destacadas · Inicio de la app','60px 1.4fr 1fr 1fr 100px',['Orden','Experiencia','Etiqueta','Operador','Estado'], s.featured.map((r,i) => ({
+          cells:[bx(String(i+1)), bx(r.t), tag(r.tag,'muted'), tx(r.op), r.on ? tag('Visible','ok') : tag('Oculta','muted')],
+          btns:[ ...(i>0 ? [btn('↑ Subir', () => { this.setState(x => { const f = [...x.featured]; [f[i-1], f[i]] = [f[i], f[i-1]]; return { featured:f }; }); this.log('Campañas', `Subió «${r.t}» en destacadas`); })] : []), btn(r.on ? 'Ocultar' : 'Mostrar', () => this.upd('featured', r.id, { on:!r.on }, 'Campañas', `${r.on ? 'Ocultó' : 'Mostró'} «${r.t}» en destacadas`))] })), { actW:'180px', minW:'820px' }));
+        B.push(N('Los cupos y plazos de las ofertas salen del inventario real del operador. No se muestran urgencias falsas.','muted')); }
+      if (tab===3) {
+        B.push(K([['9.870','Usuarios con intereses'],['7,2','Intereses promedio por usuario'],[s.params.intMin,'Mínimo obligatorio en el primer ingreso','#455073']]));
+        B.push(BR('Intereses más elegidos', [['Playas',7120000,'#0A8F4E','72%'],['Islas',6880000,'#0A8F4E','70%'],['Gastronomía local',5410000,'#9B51E0','55%'],['Vida nocturna',4900000,'#9B51E0','50%'],['Yates',3150000,'#FFD700','32%'],['Ciudad Amurallada',3020000,'#FFD700','31%'],['Museos',1480000,'#455073','15%']]));
+        B.push(N('Usa los intereses como segmento en push y ofertas: por ejemplo, la campaña «Atardecer en la bahía» solo a quienes eligieron Yates o Fiestas en barco.','info')); } }
+
+    if (mod==='cfg') {
+      if (tab===0) {
+        B.push(T('Parámetros del negocio','1.6fr 1.8fr 1fr',['Parámetro','Descripción','Valor'], [['cbUser','Reparto del cashback','Parte del rendimiento que va al usuario','%'],['tn','Plazo de pago al operador','Días hábiles después del check-in (T+N)','días'],['confirmH','Confirmación del operador','Si no confirma, reembolso automático','horas'],['recMax','Recarga máxima mensual','Por billetera, sin revisión adicional','COP'],['cuotas','Cuotas de una meta nueva','Opciones al crear meta en Recargar','cuotas'],['freq','Frecuencia de aporte','Opciones al crear meta','—'],['intMin','Intereses mínimos','Obligatorios en el primer ingreso','temas'],['otpMin','Vigencia del código OTP','Solo en recuperar contraseña (correo o SMS)','min'],['otpTries','Intentos de OTP','Antes de bloquear la recuperación','intentos']]
+          .map(([k,l,d,u]) => ({ cells:[bx(l), tx(d), this.par(k,u)], btns:[] })), { actions: this.saveBtn('Configuración','parámetros del negocio'), minW:'640px' }));
+        B.push(N('Cada cambio queda en la bitácora con usuario, fecha y valor anterior.','muted')); }
+      if (tab===1) {
+        const ROLES = ['Operaciones','Riesgo','Finanzas','Contenido'];
+        B.push(T('Equipo','1.3fr 1fr 1.6fr',['Persona','Rol','Último acceso'], Object.entries(ROLE_USERS).map(([r,n],i) => ({ cells:[bx(n), tag(r, r==='Superadmin' ? 'bad' : 'info'), tx(['Ahora','Hoy · 8:40 a.m.','Hoy · 7:55 a.m.','Ayer · 6:10 p.m.','Ayer · 4:22 p.m.'][i])], btns:[] })), { col:'1/2', minW:'420px' }));
+        B.push(T('Permisos por módulo','1.6fr 0.8fr 0.8fr 0.8fr 0.8fr',['Módulo', ...ROLES.map(r => r.slice(0,5) + '.')], MODS.slice(1).map(([k,l]) => ({ cells:[tx(l), ...ROLES.map(r => ROLE_MODS[r].includes(k) ? tag('✓','ok') : tx('—'))], btns:[] })), { col:'2/3', minW:'480px' })); }
+      if (tab===2) {
+        B.push(T('Bitácora de cambios','150px 140px 120px 2fr',['Fecha','Usuario','Módulo','Acción'], s.log.map(r => ({ cells:[tx(r.when), bx(r.who), tag(r.mod,'muted'), tx(r.t)], btns:[] })), { minW:'820px' })); } }
+    return B;
+  }
+
+  renderVals(){
+    const st = this.state, allowed = ROLE_MODS[st.role], c = this.counts();
+    let mod = st.mod; const locked = mod!=='home' && !allowed.includes(mod);
+    const tab = st.tabs[mod] || 0;
+    const side = MODS.map(([k,label]) => { const on = st.mod===k, ok = k==='home' || allowed.includes(k);
+      return { label, badge: ok && c[k] ? String(c[k]) : null, locked: !ok, op: ok ? 1 : .35, bg: on ? '#0A8F4E' : 'transparent', color: on ? '#fff' : '#DCEBE3', go: () => this.goMod(k) }; });
+    const [kicker,title,sub] = HEADS[mod];
+    const tabs = (TABS[mod]||[]).map((label,i) => ({ label, line: i===tab ? '#0A8F4E' : 'transparent', color: i===tab ? '#062A1C' : '#455073', font: i===tab ? '600 13.5px Poppins,sans-serif' : '500 13.5px Poppins,sans-serif',
+      pick: () => this.setState(x => ({ tabs:{ ...x.tabs, [mod]:i } })) }));
+    const blocks = locked ? [N(`El rol ${st.role} no tiene acceso a este módulo.`,'muted')] : this.blocks(mod, tab);
+    const me = { name: ROLE_USERS[st.role] + ' · ' + st.role, ini: ROLE_USERS[st.role].split(' ').map(w => w[0]).join('') };
+    return { side, head:{ kicker, title, sub }, tabs, hasTabs: !locked && tabs.length>0, blocks, screenLabel: title + (tabs[tab] ? ' · ' + tabs[tab].label : ''),
+      roles: Object.keys(ROLE_USERS), role: st.role, onRole: e => this.setState({ role: e.target.value }), me, toast: st.toast };
+  }
+}
+</script>
+</body>
+</html>

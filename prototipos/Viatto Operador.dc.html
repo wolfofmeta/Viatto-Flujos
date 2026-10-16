@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html{color-scheme:light}input,select,textarea{background-color:#fff;color:#062A1C}
+body{margin:0;background:#F3F7F5;font-family:Poppins,sans-serif;-webkit-font-smoothing:antialiased;color:#062A1C}
+a{color:#0A7A43}a:hover{color:#075C33}
+*{box-sizing:border-box}
+button,input,select,textarea{font-family:inherit}
+select{appearance:none;-webkit-appearance:none}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #0A8F4E;outline-offset:2px}
+@keyframes ta-fade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;font-family:Poppins,sans-serif">
+
+  <aside style="width:244px;flex:none;background:#062A1C;color:#fff;display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:none;align-self:flex-start">
+    <img src="assets/logo_dark.png" alt="Viatto" style="width:140px;margin:0 0 2px -6px;mix-blend-mode:screen">
+    <div style="font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin:0 0 18px 6px">Panel de operadores</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ side }}" as="it" hint-placeholder-count="7">
+        <sc-if value="{{ it.group }}" hint-placeholder-val="{{ false }}"><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin:12px 0 4px 10px">{{ it.group }}</div></sc-if>
+        <button onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;height:40px;border:0;border-radius:10px;padding:0 10px;background:{{ it.bg }};color:{{ it.color }};font:500 13.5px Poppins,sans-serif;cursor:pointer;text-align:left">
+          <span style="flex:1">{{ it.label }}</span>
+          <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="min-width:22px;height:20px;border-radius:10px;padding:0 6px;background:{{ it.badgeBg }};color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ it.badge }}</span></sc-if>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;padding-top:18px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:rgba(255,255,255,.07)">
+        <span style="flex:none;width:36px;height:36px;border-radius:10px;background:#0A8F4E;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">NB</span>
+        <div style="display:flex;flex-direction:column;line-height:1.3;min-width:0"><span style="font-size:13px;font-weight:600">Náutica Bahía S.A.S.</span><span style="font-size:11px;color:#B9D3C6">RNT 45821 · Cartagena</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding-left:6px">
+        <a href="Viatto Operador App.dc.html" style="font-size:12px;color:#9FF0C6">→ App móvil del operador</a>
+        <a href="Viatto App.dc.html" style="font-size:12px;color:#9FF0C6">← App del viajero</a>
+        <a href="Viatto Promotor.dc.html" style="font-size:12px;color:#9FF0C6">← App del promotor</a>
+      </div>
+    </div>
+  </aside>
+
+  <main style="flex:1;min-width:0;padding:30px 34px 60px;display:flex;flex-direction:column;gap:22px">
+    <header style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px">
+      <div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#0A7A43">{{ head.kicker }}</span>
+        <h1 style="margin:0;font-size:28px;font-weight:600;letter-spacing:-.3px;line-height:1.2">{{ head.title }}</h1>
+        <p style="margin:0;font-size:14px;color:#455073;max-width:680px;text-wrap:pretty">{{ head.sub }}</p>
+      </div>
+      <sc-if value="{{ s.bookings }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ simBooking }}" style="height:44px;border:1.5px solid #062A1C;border-radius:12px;background:#fff;color:#062A1C;padding:0 16px;font:600 13.5px Poppins,sans-serif;cursor:pointer" style-hover="background:#E8F0EC">Simular nueva reserva</button>
+      </sc-if>
+      <sc-if value="{{ s.catalog }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ newProduct }}" style="height:44px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;padding:0 18px;font:600 13.5px Poppins,sans-serif;cursor:pointer" style-hover="background:#087A42">+ Crear paquete o experiencia</button>
+      </sc-if>
+    </header>
+
+    <!-- 01 VINCULACIÓN -->
+    <sc-if value="{{ s.onb }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="01 Vinculación" style="display:flex;flex-direction:column;gap:18px;max-width:920px">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ onbSteps }}" as="st" hint-placeholder-count="4">
+            <button onClick="{{ st.go }}" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;border:1.5px solid {{ st.border }};background:{{ st.bg }};text-align:left;cursor:pointer">
+              <span style="display:flex;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:{{ st.dot }};color:#fff;font-size:11.5px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ st.mark }}</span><span style="font-size:11px;color:#6b7186">{{ st.n }}</span></span>
+              <span style="font-size:13.5px;font-weight:600;color:#062A1C">{{ st.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ o.s0 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Razón social<input value="{{ f.razon }}" onChange="{{ f.onRazon }}" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">NIT<input value="{{ f.nit }}" onChange="{{ f.onNit }}" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Representante legal<input value="{{ f.rep }}" onChange="{{ f.onRep }}" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Categoría principal
+              <select value="{{ f.cat }}" onChange="{{ f.onCat }}" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C;background:#fff">
+                <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c.name }}">{{ c.name }}</option></sc-for>
+              </select>
+            </label>
+            <div style="grid-column:1/-1;display:flex;justify-content:flex-end"><button onClick="{{ o.next }}" style="height:46px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;padding:0 22px;font:600 14px Poppins,sans-serif;cursor:pointer">Enviar solicitud</button></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ o.s1 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:10px 24px 24px;display:flex;flex-direction:column">
+            <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #EAF0ED">
+                <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600">{{ d.title }}</span><span style="font-size:12px;color:{{ d.subColor }}">{{ d.sub }}</span></div>
+                <button onClick="{{ d.toggle }}" style="height:38px;border-radius:10px;border:1.5px solid {{ d.border }};background:{{ d.bg }};color:{{ d.color }};padding:0 14px;font:600 12.5px Poppins,sans-serif;cursor:pointer">{{ d.btn }}</button>
+              </div>
+            </sc-for>
+            <div style="display:flex;justify-content:flex-end;margin-top:18px"><button onClick="{{ o.next }}" disabled="{{ o.docsMissing }}" style="height:46px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;padding:0 22px;font:600 14px Poppins,sans-serif;cursor:pointer;opacity:{{ o.docsOpacity }}">Enviar a verificación</button></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ o.s2 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:18px;border:1px dashed #d9a93a;padding:24px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8a6410">Decisión · Admin Viatto</span>
+            <span style="font-size:20px;font-weight:600">{{ o.verifTitle }}</span>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#455073;max-width:620px">{{ o.verifBody }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
+              <button onClick="{{ o.verifyOk }}" style="height:42px;border:0;border-radius:12px;background:#2E6A4E;color:#fff;padding:0 16px;font:600 13px Poppins,sans-serif;cursor:pointer">Simular: verificado → contrato</button>
+              <button onClick="{{ o.verifyNeeds }}" style="height:42px;border:1.5px solid #8a6410;border-radius:12px;background:#fff;color:#6b4708;padding:0 16px;font:600 13px Poppins,sans-serif;cursor:pointer">Simular: falta info → devolver</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ o.s3 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:24px;display:flex;flex-direction:column;gap:16px">
+            <span style="font-size:18px;font-weight:600">Acuerdo comercial</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+              <div style="border-radius:14px;background:#F3F7F5;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:12px;font-weight:600;color:#455073">Comisión Viatto por categoría</span>
+                <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ c.name }}</span><b style="font-weight:600">{{ c.pctLabel }}</b></div></sc-for>
+              </div>
+              <div style="border-radius:14px;background:#F3F7F5;padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.5">
+                <span style="font-size:12px;font-weight:600;color:#455073">Plazos y cancelaciones</span>
+                <span><b style="font-weight:600">Pago:</b> T+2 días hábiles después del check-in.</span>
+                <span><b style="font-weight:600">Cancelaciones:</b> según la política de cada producto.</span>
+                <span><b style="font-weight:600">Sin confirmar en 24 h:</b> reembolso automático al viajero.</span>
+              </div>
+            </div>
+            <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:#455073"><input type="checkbox" checked="{{ o.accept }}" onChange="{{ o.toggleAccept }}" style="margin-top:3px;accent-color:#0A8F4E">Acepto el acuerdo comercial en nombre de {{ f.razon }}.</label>
+            <div style="display:flex;justify-content:flex-end"><button onClick="{{ o.sign }}" disabled="{{ o.signDisabled }}" style="height:46px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;padding:0 22px;font:600 14px Poppins,sans-serif;cursor:pointer;opacity:{{ o.signOpacity }}">Firmar digitalmente</button></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ o.done }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#fff;border-radius:18px;border:1px solid #cfe3d6;padding:24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center">
+            <span style="flex:none;width:56px;height:56px;border-radius:50%;background:#2E6A4E;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
+            <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">Operador verificado</span><span style="font-size:13.5px;color:#455073">{{ f.razon }} · NIT {{ f.nit }} · {{ f.cat }} ({{ o.myPct }}). Contrato firmado el 12 sep 2026.</span></div>
+            <button onClick="{{ o.reset }}" style="height:40px;border:1.5px solid #d6d8de;border-radius:12px;background:#fff;color:#455073;padding:0 14px;font:500 12.5px Poppins,sans-serif;cursor:pointer">Ver alta como operador nuevo</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <!-- 02 CATÁLOGO -->
+    <sc-if value="{{ s.catalog }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="02 Catálogo" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
+          <article style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;overflow:hidden;display:flex;flex-direction:column">
+            <div style="height:150px;background:#DDF7E9;position:relative">
+              <div role="img" aria-label="{{ p.title }}" style="width:100%;height:100%;background-image:{{ p.bgImg }};background-size:cover;background-position:center"></div>
+              <span style="position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ p.stBg }};color:{{ p.stColor }}">{{ p.stLabel }}</span>
+            </div>
+            <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1">
+              <span style="font-size:16px;font-weight:600">{{ p.title }}</span>
+              <span style="font-size:12.5px;color:#455073">{{ p.priceLabel }} por persona · {{ p.cupos }} cupos/día · Promotor {{ p.promo }}%</span>
+              <sc-if value="{{ p.isPub }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ p.channels }}" as="ch" hint-placeholder-count="4"><span style="font-size:11px;padding:2px 8px;border-radius:8px;background:#F1F2F4;color:#455073">{{ ch }}</span></sc-for></div>
+              </sc-if>
+              <sc-if value="{{ p.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;line-height:1.5;padding:10px 12px;border-radius:12px;background:#DDF7E9;color:#075C33">{{ p.note }}</div></sc-if>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px">
+                <button onClick="{{ p.edit }}" style="height:36px;border:1.5px solid #d6d8de;border-radius:10px;background:#fff;color:#062A1C;padding:0 14px;font:600 12.5px Poppins,sans-serif;cursor:pointer">Editar</button>
+                <sc-if value="{{ p.isCur }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ p.publish }}" style="height:36px;border:0;border-radius:10px;background:#2E6A4E;color:#fff;padding:0 12px;font:600 12px Poppins,sans-serif;cursor:pointer">Simular: publicar</button>
+                  <button onClick="{{ p.askFix }}" style="height:36px;border:1.5px solid #8a6410;border-radius:10px;background:#fff;color:#6b4708;padding:0 12px;font:600 12px Poppins,sans-serif;cursor:pointer">Pedir ajustes</button>
+                </sc-if>
+              </div>
+            </div>
+          </article>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <!-- 02 EDITOR -->
+    <sc-if value="{{ s.editor }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="02 Crear paquete" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+        <div style="flex:1 1 520px;min-width:0;background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:22px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+            <label style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Nombre<input value="{{ ed.title }}" onChange="{{ ed.on.title }}" placeholder="Ej. Snorkel en Barú" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Categoría
+              <select value="{{ ed.cat }}" onChange="{{ ed.on.cat }}" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C;background:#fff"><sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c.name }}">{{ c.name }}</option></sc-for></select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Precio por persona (COP)<input value="{{ ed.price }}" onChange="{{ ed.on.price }}" inputMode="numeric" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500;color:#455073">Fotos</span>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ ed.photos }}" as="ph" hint-placeholder-count="4">
+                <button onClick="{{ ph.add }}" style="aspect-ratio:4/3;border-radius:12px;border:1.5px dashed {{ ph.border }};background:#F7FAF8;padding:0;overflow:hidden;cursor:pointer;color:#6b7186;font:500 12px Poppins,sans-serif">
+                  <sc-if value="{{ ph.img }}" hint-placeholder-val="{{ false }}"><div style="width:100%;height:100%;background-image:{{ ph.bgImg }};background-size:cover;background-position:center"></div></sc-if>
+                  <sc-if value="{{ ph.empty }}" hint-placeholder-val="{{ true }}"><span>+ Foto</span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Itinerario (una línea por momento)<textarea value="{{ ed.itin }}" onChange="{{ ed.on.itin }}" rows="4" style="border:1px solid #d6d8de;border-radius:12px;padding:12px 14px;font:400 13.5px/1.5 Poppins,sans-serif;color:#062A1C;resize:vertical"></textarea></label>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Incluye<textarea value="{{ ed.incl }}" onChange="{{ ed.on.incl }}" rows="3" style="border:1px solid #d6d8de;border-radius:12px;padding:12px 14px;font:400 13.5px/1.5 Poppins,sans-serif;color:#062A1C;resize:vertical"></textarea></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">No incluye<textarea value="{{ ed.excl }}" onChange="{{ ed.on.excl }}" rows="3" style="border:1px solid #d6d8de;border-radius:12px;padding:12px 14px;font:400 13.5px/1.5 Poppins,sans-serif;color:#062A1C;resize:vertical"></textarea></label>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#455073">Cupos por día<input value="{{ ed.cupos }}" onChange="{{ ed.on.cupos }}" inputMode="numeric" style="height:46px;border:1px solid #d6d8de;border-radius:12px;padding:0 14px;font:400 14px Poppins,sans-serif;color:#062A1C"></label>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500;color:#455073">Días de operación</span>
+              <div style="display:flex;gap:6px"><sc-for list="{{ ed.days }}" as="d" hint-placeholder-count="7"><button onClick="{{ d.toggle }}" style="flex:1;height:46px;border-radius:10px;border:1.5px solid {{ d.border }};background:{{ d.bg }};color:{{ d.color }};font:600 12.5px Poppins,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:500;color:#455073">Política de cancelación</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+              <sc-for list="{{ ed.policies }}" as="pl" hint-placeholder-count="3">
+                <button onClick="{{ pl.pick }}" style="border-radius:12px;border:1.5px solid {{ pl.border }};background:{{ pl.bg }};padding:10px 12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:#062A1C">{{ pl.name }}</span><span style="font-size:11.5px;color:#455073;line-height:1.4">{{ pl.desc }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:500;color:#455073"><span>Comisión al promotor local</span><b style="color:#062A1C;font-weight:600">{{ ed.promo }}%</b></div>
+            <input type="range" min="0" max="20" step="1" value="{{ ed.promo }}" onChange="{{ ed.on.promo }}" style="accent-color:#0A8F4E">
+            <span style="font-size:11.5px;color:#6b7186">Más comisión = más promotores lo ofrecen. Solo se paga si la venta viene de un promotor.</span>
+          </div>
+        </div>
+
+        <div style="flex:0 1 340px;min-width:280px;display:flex;flex-direction:column;gap:14px;position:sticky;top:20px">
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:18px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;font-weight:600;color:#455073">Lo que recibes por persona</span>
+            <div style="display:flex;justify-content:space-between;font-size:13.5px"><span>Precio</span><span>{{ ed.calc.price }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#455073"><span>Comisión Viatto ({{ ed.calc.taPct }})</span><span>− {{ ed.calc.ta }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#455073"><span>Promotor ({{ ed.promo }}%, si aplica)</span><span>− {{ ed.calc.pr }}</span></div>
+            <div style="height:1px;background:#E3EBE7"></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span>Neto con promotor</span><b style="font-weight:600">{{ ed.calc.netPr }}</b></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span>Neto venta directa</span><b style="font-weight:600;color:#2E6A4E">{{ ed.calc.net }}</b></div>
+          </div>
+          <div style="background:#F7FAF8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.5;color:#455073">Al enviarlo, el equipo de Viatto lo revisa. Si se publica, aparece en Explorar, el Mapa, la guía IA y el catálogo de promotores.</div>
+          <sc-if value="{{ ed.missing }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#075C33">Falta: {{ ed.missing }}</div></sc-if>
+          <button onClick="{{ ed.submit }}" disabled="{{ ed.disabled }}" style="height:48px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;font:600 14px Poppins,sans-serif;cursor:pointer;opacity:{{ ed.opacity }}">Enviar a curaduría</button>
+          <button onClick="{{ ed.cancel }}" style="height:44px;border:1.5px solid #d6d8de;border-radius:12px;background:#fff;color:#455073;font:500 13px Poppins,sans-serif;cursor:pointer">Cancelar</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- 03 RESERVAS -->
+    <sc-if value="{{ s.bookings }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="03 Reservas" style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+          <sc-for list="{{ bk.kpis }}" as="kp" hint-placeholder-count="4">
+            <div style="background:#fff;border-radius:16px;border:1px solid #E3EBE7;padding:14px 16px;display:flex;flex-direction:column;gap:2px"><span style="font-size:24px;font-weight:600;color:{{ kp.color }}">{{ kp.v }}</span><span style="font-size:12px;color:#455073">{{ kp.l }}</span></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ bk.filters }}" as="fl" hint-placeholder-count="5">
+            <button onClick="{{ fl.pick }}" style="height:34px;padding:0 14px;border-radius:17px;border:1px solid {{ fl.border }};background:{{ fl.bg }};color:{{ fl.color }};font:500 12.5px Poppins,sans-serif;cursor:pointer">{{ fl.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+          <div style="flex:1 1 560px;min-width:0;background:#fff;border-radius:18px;border:1px solid #E3EBE7;overflow-x:auto">
+            <div style="min-width:760px">
+              <div style="display:grid;grid-template-columns:96px 1.2fr 1.6fr 70px 110px 120px 130px;gap:10px;padding:12px 18px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6b7186;border-bottom:1px solid #E3EBE7"><span>Código</span><span>Viajero</span><span>Experiencia</span><span>Pers.</span><span>Promotor</span><span>Total</span><span>Estado</span></div>
+              <sc-for list="{{ bk.rows }}" as="r" hint-placeholder-count="6">
+                <button onClick="{{ r.select }}" style="width:100%;display:grid;grid-template-columns:96px 1.2fr 1.6fr 70px 110px 120px 130px;gap:10px;align-items:center;padding:12px 18px;border:0;border-bottom:1px solid #EEF3F0;background:{{ r.bg }};text-align:left;cursor:pointer;font:400 13px Poppins,sans-serif;color:#062A1C">
+                  <span style="font-weight:600">{{ r.id }}</span>
+                  <span>{{ r.name }}</span>
+                  <span style="display:flex;flex-direction:column;line-height:1.3"><span>{{ r.ptitle }}</span><span style="font-size:11.5px;color:#6b7186">{{ r.date }}</span></span>
+                  <span>{{ r.qty }}</span>
+                  <span style="font-size:12px;color:#455073">{{ r.promoLabel }}</span>
+                  <span style="font-weight:600">{{ r.total }}</span>
+                  <span style="justify-self:start;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ r.stBg }};color:{{ r.stColor }}">{{ r.stLabel }}</span>
+                </button>
+              </sc-for>
+              <sc-if value="{{ bk.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 18px;font-size:13px;color:#6b7186">No hay reservas en este estado.</div></sc-if>
+            </div>
+          </div>
+
+          <sc-if value="{{ d.has }}" hint-placeholder-val="{{ true }}">
+            <aside style="flex:0 1 370px;min-width:300px;background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:20px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px;font-weight:600;flex:1">{{ d.id }}</span><span style="font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ d.stBg }};color:{{ d.stColor }}">{{ d.stLabel }}</span></div>
+              <sc-if value="{{ d.isNew }}" hint-placeholder-val="{{ false }}">
+                <div style="border-radius:14px;border:1px dashed #d9a93a;background:#FBF4E2;padding:14px;display:flex;flex-direction:column;gap:10px">
+                  <span style="font-size:13.5px;font-weight:600;color:#6b4708">Confirma en {{ d.left }}</span>
+                  <span style="font-size:12px;line-height:1.5;color:#6b4708">Si no confirmas a tiempo, el viajero recibe un reembolso automático.</span>
+                  <div style="display:flex;gap:8px"><button onClick="{{ d.confirm }}" style="flex:1;height:42px;border:0;border-radius:10px;background:#0A8F4E;color:#fff;font:600 13px Poppins,sans-serif;cursor:pointer">Confirmar</button><button onClick="{{ d.reject }}" style="flex:1;height:42px;border:1.5px solid #8a6410;border-radius:10px;background:#fff;color:#6b4708;font:600 12.5px Poppins,sans-serif;cursor:pointer">No puedo atender</button></div>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #EEF3F0;font-size:13px"><span style="color:#455073">{{ i.k }}</span><span style="text-align:right;font-weight:500">{{ i.v }}</span></div></sc-for>
+              </div>
+              <div style="border-radius:14px;background:#F3F7F5;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:12px;font-weight:600;color:#455073">Forma de pago</span>
+                <sc-for list="{{ d.pay }}" as="py" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ py.k }}</span><span>{{ py.v }}</span></div></sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#455073">Total</span><span>{{ d.total }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#455073">Comisión Viatto ({{ d.taPct }})</span><span>− {{ d.ta }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#455073">Comisión promotor</span><span>− {{ d.pr }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;padding-top:6px;border-top:1px solid #E3EBE7"><b style="font-weight:600">Recibes</b><b style="font-weight:600;color:#2E6A4E">{{ d.net }}</b></div>
+              </div>
+              <sc-if value="{{ d.isConf }}" hint-placeholder-val="{{ false }}">
+                <div style="border-radius:14px;border:1px solid #E3EBE7;padding:14px;display:flex;flex-direction:column;gap:10px">
+                  <span style="font-size:13.5px;font-weight:600">Check-in del día del servicio</span>
+                  <div style="display:flex;gap:8px"><input value="{{ voucher }}" onChange="{{ onVoucher }}" placeholder="Código del voucher" style="flex:1;min-width:0;height:42px;border:1px solid #d6d8de;border-radius:10px;padding:0 12px;font:400 13px Poppins,sans-serif;text-transform:uppercase"><button onClick="{{ d.validate }}" style="height:42px;border:0;border-radius:10px;background:#062A1C;color:#fff;padding:0 14px;font:600 12.5px Poppins,sans-serif;cursor:pointer">Validar</button></div>
+                  <button onClick="{{ d.scan }}" style="height:42px;border:1.5px solid #0A8F4E;border-radius:10px;background:#fff;color:#0A7A43;font:600 13px Poppins,sans-serif;cursor:pointer">Escanear QR del viajero</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ d.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;line-height:1.5;padding:12px 14px;border-radius:12px;background:{{ d.noteBg }};color:{{ d.noteColor }}">{{ d.note }}</div></sc-if>
+            </aside>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- 04 LIQUIDACIÓN -->
+    <sc-if value="{{ s.payouts }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="04 Liquidación" style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+          <div style="background:#062A1C;color:#fff;border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#B9D3C6">Próximo pago · {{ py.nextDate }}</span><span style="font-size:28px;font-weight:600">{{ py.next }}</span><span style="font-size:12px;color:#B9D3C6">A Bancolombia ahorros ****4821</span></div>
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:18px 20px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#455073">Por servicios confirmados</span><span style="font-size:24px;font-weight:600">{{ py.pending }}</span><span style="font-size:12px;color:#6b7186">Se libera tras el check-in</span></div>
+          <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:18px 20px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#455073">Pagado en septiembre</span><span style="font-size:24px;font-weight:600">{{ py.paidMonth }}</span><span style="font-size:12px;color:#6b7186">4 liquidaciones</span></div>
+        </div>
+        <div style="background:#DDECE2;border-radius:14px;padding:12px 16px;font-size:13px;line-height:1.5;color:#1f5a3f">Recibes el precio menos la comisión de Viatto y, si la venta vino de un promotor, su comisión. El pago llega T+2 días hábiles después del check-in.</div>
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;overflow-x:auto">
+          <div style="min-width:720px">
+            <div style="display:grid;grid-template-columns:1.1fr 80px 1fr 1fr 1fr 1fr 110px;gap:10px;padding:12px 18px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6b7186;border-bottom:1px solid #E3EBE7"><span>Fecha de pago</span><span>Reservas</span><span>Bruto</span><span>Viatto</span><span>Promotores</span><span>Neto</span><span>Estado</span></div>
+            <sc-for list="{{ py.rows }}" as="r" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:1.1fr 80px 1fr 1fr 1fr 1fr 110px;gap:10px;align-items:center;padding:13px 18px;border-bottom:1px solid #EEF3F0;font-size:13px">
+                <span style="font-weight:600">{{ r.date }}</span><span>{{ r.n }}</span><span>{{ r.gross }}</span><span style="color:#455073">− {{ r.ta }}</span><span style="color:#455073">− {{ r.pr }}</span><span style="font-weight:600">{{ r.net }}</span>
+                <span style="justify-self:start;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ r.stBg }};color:{{ r.stColor }}">{{ r.st }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- REPORTES -->
+    <sc-if value="{{ s.reports }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="04 Ventas y reportes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:20px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600">Ventas por producto · octubre</span>
+          <sc-for list="{{ rp.products }}" as="b" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ b.l }}</span><b style="font-weight:600">{{ b.v }}</b></div><div style="height:10px;border-radius:5px;background:#E8F0EC"><div style="height:100%;width:{{ b.w }};border-radius:5px;background:#0A8F4E"></div></div></div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:20px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600">Ventas por canal</span>
+          <sc-for list="{{ rp.channels }}" as="b" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ b.l }}</span><b style="font-weight:600">{{ b.v }}</b></div><div style="height:10px;border-radius:5px;background:#E8F0EC"><div style="height:100%;width:{{ b.w }};border-radius:5px;background:#062A1C"></div></div></div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:20px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:15px;font-weight:600;margin-bottom:6px">Ventas por promotor</span>
+          <sc-for list="{{ rp.promoters }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #EEF3F0;font-size:13px"><span style="width:20px;color:#6b7186">{{ p.n }}</span><span style="flex:1;display:flex;flex-direction:column;line-height:1.3"><span style="font-weight:500">{{ p.code }}</span><span style="font-size:11.5px;color:#6b7186">{{ p.type }} · {{ p.sales }} ventas</span></span><b style="font-weight:600">{{ p.v }}</b></div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;padding:20px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:15px;font-weight:600;flex:1">Reseñas</span><span style="font-size:24px;font-weight:600">4,7</span><span style="color:#0A8F4E;letter-spacing:1px">★★★★★</span></div>
+          <span style="font-size:12px;color:#6b7186">128 reseñas verificadas, solo de viajeros con check-in.</span>
+          <sc-for list="{{ rp.reviews }}" as="rv" hint-placeholder-count="3">
+            <div style="padding:10px 0;border-top:1px solid #EEF3F0;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:12.5px"><b style="font-weight:600">{{ rv.who }}</b><span style="color:#0A8F4E">{{ rv.stars }}</span></div><span style="font-size:13px;line-height:1.5;color:#455073">{{ rv.t }}</span><span style="font-size:11px;color:#6b7186">{{ rv.p }}</span></div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- FACTURACIÓN -->
+    <sc-if value="{{ s.invoices }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="04 Facturación" style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fff;border-radius:18px;border:1px solid #E3EBE7;overflow-x:auto">
+          <div style="min-width:720px">
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr 1fr 1fr 120px 170px;gap:10px;padding:12px 18px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6b7186;border-bottom:1px solid #E3EBE7"><span>Factura</span><span>Periodo</span><span>Comisiones</span><span>IVA 19%</span><span>Total</span><span>DIAN</span><span></span></div>
+            <sc-for list="{{ invoices }}" as="iv" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:130px 1fr 1fr 1fr 1fr 120px 170px;gap:10px;align-items:center;padding:13px 18px;border-bottom:1px solid #EEF3F0;font-size:13px">
+                <span style="font-weight:600">{{ iv.no }}</span><span>{{ iv.period }}</span><span>{{ iv.base }}</span><span style="color:#455073">{{ iv.iva }}</span><span style="font-weight:600">{{ iv.total }}</span>
+                <span style="justify-self:start;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ iv.stBg }};color:{{ iv.stColor }}">{{ iv.st }}</span>
+                <span style="display:flex;gap:6px;justify-content:flex-end"><sc-if value="{{ iv.ready }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dl }}" style="height:32px;border:1.5px solid #d6d8de;border-radius:8px;background:#fff;padding:0 10px;font:600 11.5px Poppins,sans-serif;cursor:pointer">PDF</button><button onClick="{{ dl }}" style="height:32px;border:1.5px solid #d6d8de;border-radius:8px;background:#fff;padding:0 10px;font:600 11.5px Poppins,sans-serif;cursor:pointer">XML</button></sc-if></span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#6b7186">Viatto factura solo su comisión. El valor del servicio lo factura cada operador al viajero.</div>
+      </section>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{ notif }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;top:18px;right:18px;z-index:60;width:340px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-radius:18px;box-shadow:0 14px 40px rgba(6,42,28,.22);padding:12px 14px;display:flex;gap:12px;animation:ta-fade .25s ease">
+      <img src="assets/appicon.png" alt="" style="width:38px;height:38px;border-radius:9px;flex:none">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#6b7186"><span>VIATTO OPERADORES</span><span>ahora</span></div><b style="font-size:13.5px;font-weight:600">Nueva reserva</b><span style="font-size:12.5px;line-height:1.4;color:#455073">{{ notif }}</span></div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;background:#062A1C;color:#fff;font-size:13px;padding:11px 20px;border-radius:22px">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const cop = n => '$' + Math.round(n).toLocaleString('es-CO');
+const CATS = [['Islas y náutica',10],['Tours en ciudad',12],['Hoteles',8],['Transporte',5],['Gastronomía',15]];
+const catPct = c => (CATS.find(x => x[0] === c) || CATS[0])[1];
+const POLICIES = [['Flexible','Reembolso total hasta 24 h antes.'],['Moderada','100% hasta 72 h antes, 50% hasta 24 h.'],['Estricta','50% hasta 7 días antes. Luego sin reembolso.']];
+const DAYS = ['L','M','X','J','V','S','D'];
+const ST = { new:['Por confirmar','#DDF7E9','#075C33'], conf:['Confirmada','#E3E9F6','#2c4a86'], done:['Completada','#DDECE2','#1f5a3f'], ref:['Reembolsada','#ECEDF0','#455073'] };
+const PST = { pub:['Publicado','#DDECE2','#1f5a3f'], cur:['En curaduría','#F6EACB','#6b4708'], adj:['Ajustes pedidos','#DDF7E9','#075C33'] };
+const emptyEd = () => ({ title:'', cat:'Islas y náutica', price:'', cupos:'20', itin:'', incl:'', excl:'', days:{ S:true, D:true }, policy:'Moderada', promo:10, photos:[] });
+
+class Component extends DCLogic {
+  state = { sec:'bookings', filter:'all', selId:'TA-7K2Q', voucher:'', notif:null, toast:null, editId:null, ed: emptyEd(),
+    onb:{ step:4, verif:'review', accept:false }, f:{ razon:'Náutica Bahía S.A.S.', nit:'901.456.782-1', rep:'María Fernanda Díaz', cat:'Islas y náutica' },
+    docs:{ rut:true, rnt:true, pol:true, banco:true },
+    products:[
+      { id:'ros', title:'Día en Islas del Rosario', cat:'Islas y náutica', price:380000, cupos:24, img:'assets/beach.png', status:'pub', promo:10, policy:'Moderada', itin:'7:30 Salida del Muelle La Bodeguita\n10:00 Acuario y playa en Isla Grande\n13:00 Almuerzo típico\n16:30 Regreso', incl:'Lancha ida y vuelta\nAlmuerzo\nChaleco salvavidas', excl:'Impuesto de muelle\nSnorkel', days:{L:true,M:true,X:true,J:true,V:true,S:true,D:true} },
+      { id:'pbl', title:'Playa Blanca y Cholón', cat:'Islas y náutica', price:290000, cupos:30, img:'assets/beach_friends.png', status:'pub', promo:10, policy:'Flexible', days:{V:true,S:true,D:true} },
+      { id:'baru', title:'Snorkel en Barú', cat:'Islas y náutica', price:240000, cupos:12, img:null, status:'cur', promo:12, policy:'Moderada', days:{S:true,D:true} },
+      { id:'pel', title:'Isla privada Pelícanos', cat:'Islas y náutica', price:520000, cupos:10, img:null, status:'adj', promo:8, note:'Curaduría: agrega la política de cancelación y al menos 3 fotos del lugar.', days:{S:true} } ],
+    bookings:[
+      { id:'TA-7K2Q', name:'Ana Martínez', phone:'+57 310 456 7812', pid:'ros', date:'Sáb 10 oct', qty:2, pay:[['Wallet Viatto',400000],['Tarjeta',360000]], promo:'JUAN-CTG', status:'new', left:'22 h' },
+      { id:'TA-9M4D', name:'Carlos Rojas', phone:'+57 300 218 9034', pid:'pbl', date:'Dom 11 oct', qty:4, pay:[['Tarjeta',1160000]], promo:null, status:'new', left:'5 h' },
+      { id:'TA-3H8P', name:'Laura León', phone:'+57 315 777 2201', pid:'ros', date:'Hoy · 5 oct', qty:2, pay:[['Wallet Viatto',760000]], promo:'JUAN-CTG', status:'conf' },
+      { id:'TA-5T1C', name:'Grupo Pérez', phone:'+57 301 555 0192', pid:'pbl', date:'Hoy · 5 oct', qty:6, pay:[['Wallet Viatto',1000000],['PSE',740000]], promo:'MARIA-HTL', status:'conf' },
+      { id:'TA-2B6R', name:'Sofía Gómez', phone:'+57 312 980 4410', pid:'ros', date:'Sáb 3 oct', qty:3, pay:[['Tarjeta',1140000]], promo:'JUAN-CTG', status:'done', checkin:'3 oct · 7:24 a.m.' },
+      { id:'TA-8N3L', name:'Andrés Lozano', phone:'+57 318 336 1209', pid:'pbl', date:'Vie 2 oct', qty:2, pay:[['Wallet Viatto',580000]], promo:null, status:'done', checkin:'2 oct · 8:02 a.m.' },
+      { id:'TA-4W9X', name:'Kevin Mosquera', phone:'+57 320 114 6678', pid:'ros', date:'Lun 12 oct', qty:1, pay:[['Tarjeta',380000]], promo:null, status:'ref', refNote:'No confirmada en 24 h. Se reembolsó al viajero automáticamente.' } ] };
+
+  componentWillUnmount(){ clearTimeout(this.tt); clearTimeout(this.nt); }
+  say(m){ this.setState({ toast:m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 2400); }
+  prod(id){ return this.state.products.find(p => p.id === id) || this.state.products[0]; }
+  money(b){ const p = this.prod(b.pid), total = p.price*b.qty, ta = total*catPct(p.cat)/100, pr = b.promo ? total*p.promo/100 : 0; return { total, ta, pr, net: total-ta-pr }; }
+  setB(id, patch){ this.setState(x => ({ bookings: x.bookings.map(b => b.id===id ? { ...b, ...patch } : b) })); }
+  setEd(patch){ this.setState(x => ({ ed: { ...x.ed, ...patch } })); }
+  go(sec){ this.setState({ sec }); if (this.root) window.scrollTo({ top:0 }); }
+
+  renderVals() {
+    const st = this.state, S = st.sec;
+    const s = { onb:S==='onb', catalog:S==='catalog', editor:S==='editor', bookings:S==='bookings', payouts:S==='payouts', reports:S==='reports', invoices:S==='invoices' };
+    const nNew = st.bookings.filter(b => b.status==='new').length;
+    const onbDone = st.onb.step >= 4;
+    const SIDE = [['onb','Vinculación','01 · Vinculación', onbDone ? '✓' : '!', onbDone ? '#2E6A4E' : '#0A8F4E'],
+      ['catalog','Catálogo','02 · Catálogo', st.products.length, '#3E5A4D'],
+      ['bookings','Reservas','03 · Reservas', nNew || null, '#0A8F4E'],
+      ['payouts','Liquidación','04 · Liquidación'],['reports','Ventas y reportes'],['invoices','Facturación']];
+    const side = SIDE.map(([k,label,group,badge,badgeBg]) => { const on = S===k || (k==='catalog' && S==='editor');
+      return { label, group:group||null, badge:badge||null, badgeBg, bg: on ? '#0A8F4E' : 'transparent', color: on ? '#fff' : '#DCEBE3', go: () => this.go(k) }; });
+
+    const HEADS = { onb:['01 · Vinculación','Alta del operador','Solicitud, documentos, verificación y acuerdo comercial. Solo operan prestadores con RNT vigente.'],
+      catalog:['02 · Catálogo','Tus paquetes y experiencias','Lo que publiques pasa por curaduría antes de aparecer en Explorar, el Mapa, la guía IA y el catálogo de promotores.'],
+      editor:['02 · Catálogo', st.editId ? 'Editar experiencia' : 'Crear paquete o experiencia','Fotos, itinerario, incluye y no incluye, precio, cupos, fechas, cancelación y comisión al promotor.'],
+      bookings:['03 · Reservas','Reservas','Confirma cada reserva en 24 horas y haz el check-in con el QR del viajero el día del servicio.'],
+      payouts:['04 · Liquidación','Liquidación','Lo que recibes después de cada servicio, con el detalle de comisiones.'],
+      reports:['04 · Liquidación','Ventas y reportes','Cómo se venden tus experiencias y qué dicen los viajeros.'],
+      invoices:['04 · Liquidación','Facturación','Facturas electrónicas de la comisión, emitidas por Viatto.'] };
+    const [kicker,title,sub] = HEADS[S]; const head = { kicker, title, sub };
+
+    // Onboarding
+    const step = st.onb.step, SL = ['Solicitud de alta','Documentos','Verificación','Acuerdo comercial'];
+    const onbSteps = SL.map((label,i) => { const done = step > i, cur = step === i;
+      return { label, n: 'Paso ' + (i+1), mark: done ? '✓' : String(i+1), dot: done ? '#2E6A4E' : cur ? '#0A8F4E' : '#c9ccd6', border: cur ? '#0A8F4E' : '#E3EBE7', bg: cur ? '#F1FCF6' : '#fff',
+        go: () => { if (done || cur) this.setState(x => ({ onb: { ...x.onb, step: i } })); } }; });
+    const setOnb = p => this.setState(x => ({ onb: { ...x.onb, ...p } }));
+    const docsMissing = Object.values(st.docs).some(v => !v);
+    const needs = st.onb.verif === 'needs';
+    const o = { s0: step===0, s1: step===1, s2: step===2, s3: step===3, done: onbDone,
+      next: () => setOnb({ step: step+1, verif:'review' }), docsMissing, docsOpacity: docsMissing ? .45 : 1,
+      verifTitle: needs ? 'Falta información' : '¿Verificado?', verifBody: needs ? 'Devuelto al operador: la póliza de responsabilidad civil está vencida. Corrige el documento y vuelve a enviar.' : 'El equipo de Viatto revisa RUT, Cámara de Comercio, RNT y pólizas. Suele tardar de 1 a 2 días hábiles.',
+      verifyOk: () => setOnb({ step:3 }), verifyNeeds: () => { this.setState(x => ({ docs: { ...x.docs, pol:false } })); setOnb({ step:1, verif:'needs' }); this.say('Solicitud devuelta: falta póliza vigente'); },
+      accept: st.onb.accept, toggleAccept: () => setOnb({ accept: !st.onb.accept }), signDisabled: !st.onb.accept, signOpacity: st.onb.accept ? 1 : .45,
+      sign: () => { setOnb({ step:4 }); this.say('Contrato firmado. Ya puedes publicar experiencias'); },
+      reset: () => { this.setState({ docs:{ rut:false, rnt:false, pol:false, banco:false } }); setOnb({ step:0, accept:false, verif:'review' }); },
+      myPct: catPct(st.f.cat) + '% de comisión' };
+    const setF = k => e => { const v = e.target.value; this.setState(x => ({ f: { ...x.f, [k]: v } })); };
+    const f = { ...st.f, onRazon: setF('razon'), onNit: setF('nit'), onRep: setF('rep'), onCat: setF('cat') };
+    const DOCS = [['rut','RUT y Cámara de Comercio','Expedición no mayor a 30 días'],['rnt','Registro Nacional de Turismo','Debe estar vigente'],['pol','Pólizas','Responsabilidad civil extracontractual'],['banco','Certificación bancaria','Cuenta a nombre de la empresa']];
+    const docs = DOCS.map(([k,title,sub]) => { const ok = st.docs[k]; const bad = k==='pol' && needs && !ok;
+      return { title, sub: bad ? 'Vencida: sube una póliza vigente' : sub, subColor: bad ? '#0A7A43' : '#6b7186', btn: ok ? '✓ ' + k.toUpperCase() + '.pdf' : 'Subir PDF', border: ok ? '#cfe3d6' : '#0A8F4E', bg: ok ? '#f2f8f4' : '#fff', color: ok ? '#1f5a3f' : '#0A7A43',
+        toggle: () => this.setState(x => ({ docs: { ...x.docs, [k]: !x.docs[k] } })) }; });
+    const cats = CATS.map(([name,p]) => ({ name, pctLabel: p + '%' }));
+
+    // Catalog
+    const products = st.products.map(p => { const [l,bg,c] = PST[p.status];
+      return { ...p, bgImg: p.img ? `url("${p.img}")` : 'none', priceLabel: cop(p.price), stLabel:l, stBg:bg, stColor:c, isPub: p.status==='pub', isCur: p.status==='cur', note: p.status==='adj' ? p.note : null,
+        channels:['Explorar','Mapa','Guía IA','Promotores'],
+        edit: () => this.setState({ sec:'editor', editId:p.id, ed:{ title:p.title, cat:p.cat, price:String(p.price), cupos:String(p.cupos), itin:p.itin||'', incl:p.incl||'', excl:p.excl||'', days:{ ...(p.days||{}) }, policy:p.policy||'', promo:p.promo, photos: p.img ? [p.img] : [] } }),
+        publish: () => { this.setState(x => ({ products: x.products.map(q => q.id===p.id ? { ...q, status:'pub' } : q) })); this.say(p.title + ' publicado'); },
+        askFix: () => { this.setState(x => ({ products: x.products.map(q => q.id===p.id ? { ...q, status:'adj', note:'Curaduría: aclara el punto de encuentro y la duración del snorkel.' } : q) })); } }; });
+
+    // Editor
+    const E = st.ed, price = parseInt(String(E.price).replace(/\D/g,'')) || 0, taP = catPct(E.cat);
+    const POOL = ['assets/beach.png','assets/beach_friends.png','assets/ob2.png','assets/map.png'];
+    const photos = [0,1,2,3].map(i => ({ img: E.photos[i] || null, bgImg: E.photos[i] ? `url("${E.photos[i]}")` : 'none', empty: !E.photos[i], border: E.photos[i] ? 'transparent' : '#d6d8de',
+      add: () => this.setEd({ photos: E.photos[i] ? E.photos.filter((_,j) => j!==i) : [...E.photos, POOL.find(u => !E.photos.includes(u))] }) }));
+    const miss = []; if (!E.title.trim()) miss.push('nombre'); if (!price) miss.push('precio'); if (E.photos.length < 3) miss.push('3 fotos'); if (!E.itin.trim()) miss.push('itinerario'); if (!E.policy) miss.push('política de cancelación'); if (!Object.values(E.days).some(Boolean)) miss.push('días');
+    const on = {}; ['title','price','cupos','itin','incl','excl','cat'].forEach(k => on[k] = e => this.setEd({ [k]: e.target.value }));
+    on.promo = e => this.setEd({ promo: Number(e.target.value) });
+    const ed = { ...E, on, photos,
+      days: DAYS.map(l => { const a = !!E.days[l]; return { l, border: a ? '#0A8F4E' : '#d6d8de', bg: a ? '#0A8F4E' : '#fff', color: a ? '#fff' : '#455073', toggle: () => this.setEd({ days: { ...E.days, [l]: !a } }) }; }),
+      policies: POLICIES.map(([name,desc]) => ({ name, desc, border: E.policy===name ? '#0A8F4E' : '#e1e3e8', bg: E.policy===name ? '#F1FCF6' : '#fff', pick: () => this.setEd({ policy:name }) })),
+      calc: { price: cop(price), taPct: taP + '%', ta: cop(price*taP/100), pr: cop(price*E.promo/100), netPr: cop(price*(1-taP/100-E.promo/100)), net: cop(price*(1-taP/100)) },
+      missing: miss.length ? miss.join(', ') : null, disabled: miss.length>0, opacity: miss.length ? .45 : 1,
+      submit: () => { if (miss.length) return; const id = st.editId || 'n' + Date.now();
+        const np = { id, title:E.title.trim(), cat:E.cat, price, cupos:parseInt(E.cupos)||10, img:E.photos[0]||null, status:'cur', promo:E.promo, policy:E.policy, itin:E.itin, incl:E.incl, excl:E.excl, days:E.days };
+        this.setState(x => ({ products: st.editId ? x.products.map(q => q.id===id ? np : q) : [np, ...x.products], sec:'catalog', editId:null, ed: emptyEd() }));
+        this.say('Enviado a curaduría. Te avisamos cuando se publique'); },
+      cancel: () => this.setState({ sec:'catalog', editId:null, ed: emptyEd() }) };
+
+    // Bookings
+    const FL = [['all','Todas'],['new','Por confirmar'],['conf','Confirmadas'],['done','Completadas'],['ref','Reembolsadas']];
+    const filters = FL.map(([k,label]) => { const a = st.filter===k; const n = k==='all' ? st.bookings.length : st.bookings.filter(b => b.status===k).length;
+      return { label: label + ' · ' + n, border: a ? '#062A1C' : '#d6d8de', bg: a ? '#062A1C' : '#fff', color: a ? '#fff' : '#062A1C', pick: () => this.setState({ filter:k }) }; });
+    const rows = st.bookings.filter(b => st.filter==='all' || b.status===st.filter).map(b => { const [l,bg,c] = ST[b.status];
+      return { ...b, ptitle: this.prod(b.pid).title, promoLabel: b.promo || 'Directo', total: cop(this.money(b).total), stLabel: b.status==='new' ? l + ' · ' + b.left : l, stBg:bg, stColor:c,
+        bg: b.id===st.selId ? '#F1FCF6' : '#fff', select: () => this.setState({ selId:b.id, voucher:'' }) }; });
+    const confToday = st.bookings.filter(b => b.status==='conf' && b.date.startsWith('Hoy')).length;
+    const monthSales = st.bookings.filter(b => b.status!=='ref').reduce((a,b) => a + this.money(b).total, 0) + 8640000;
+    const bk = { rows, filters, empty: rows.length===0, kpis:[
+      { v:String(nNew), l:'Por confirmar', color: nNew ? '#0A7A43' : '#062A1C' }, { v:String(confToday), l:'Check-ins pendientes hoy', color:'#062A1C' },
+      { v:String(st.bookings.filter(b => b.status==='conf').length), l:'Confirmadas próximas', color:'#062A1C' }, { v:cop(monthSales), l:'Ventas del mes', color:'#062A1C' } ] };
+
+    const B = st.bookings.find(b => b.id===st.selId);
+    let d = { has:false };
+    if (B) { const m = this.money(B), P = this.prod(B.pid), [l,bg,c] = ST[B.status];
+      const doCheckin = () => { this.setB(B.id, { status:'done', checkin:'5 oct · ' + new Date().toLocaleTimeString('es-CO',{ hour:'numeric', minute:'2-digit' }) }); this.setState({ voucher:'' }); this.say('Check-in validado · pago programado para el mié 7 oct'); };
+      d = { has:true, id:B.id, stLabel:l, stBg:bg, stColor:c, isNew: B.status==='new', isConf: B.status==='conf', left:B.left,
+        info:[{k:'Viajero',v:B.name},{k:'WhatsApp',v:B.phone},{k:'Experiencia',v:P.title},{k:'Fecha',v:B.date},{k:'Personas',v:String(B.qty)},{k:'Promotor atribuido',v:B.promo || 'Ninguno · venta directa'}],
+        pay: B.pay.map(([k,v]) => ({ k, v: cop(v) })), total: cop(m.total), taPct: catPct(P.cat)+'%', ta: cop(m.ta), pr: cop(m.pr), net: cop(m.net),
+        confirm: () => { this.setB(B.id, { status:'conf' }); this.say('Reserva confirmada. Enviamos el voucher al viajero'); },
+        reject: () => { this.setB(B.id, { status:'ref', refNote:'Rechazada por el operador. Se reembolsó al viajero automáticamente.' }); this.say('Reembolso automático enviado al viajero'); },
+        validate: () => { if (st.voucher.trim().toUpperCase() === B.id) doCheckin(); else this.say('El código no coincide con esta reserva'); },
+        scan: doCheckin,
+        note: B.status==='done' ? `Check-in ${B.checkin}. Pago de ${cop(m.net)} el mié 7 oct.` : B.status==='ref' ? B.refNote : null,
+        noteBg: B.status==='done' ? '#DDECE2' : '#ECEDF0', noteColor: B.status==='done' ? '#1f5a3f' : '#455073' }; }
+
+    // Payouts
+    const doneB = st.bookings.filter(b => b.status==='done'), sum = (arr,k) => arr.reduce((a,b) => a + this.money(b)[k], 0);
+    const confB = st.bookings.filter(b => b.status==='conf');
+    const HIST = [['Mié 30 sep',5,2140000],['Mié 23 sep',3,1310000],['Mié 16 sep',6,2480000],['Mié 9 sep',4,1650000]];
+    const py = { nextDate:'mié 7 oct', next: cop(sum(doneB,'net')), pending: cop(sum(confB,'net')), paidMonth: cop(HIST.reduce((a,h) => a + h[2]*0.82, 0)),
+      rows: [{ date:'Mié 7 oct', n:String(doneB.length), gross:cop(sum(doneB,'total')), ta:cop(sum(doneB,'ta')), pr:cop(sum(doneB,'pr')), net:cop(sum(doneB,'net')), st:'Programado', stBg:'#E3E9F6', stColor:'#2c4a86' },
+        ...HIST.map(([date,n,g]) => ({ date, n:String(n), gross:cop(g), ta:cop(g*.1), pr:cop(g*.08), net:cop(g*.82), st:'Pagado', stBg:'#DDECE2', stColor:'#1f5a3f' }))] };
+
+    const bars = (arr, color) => { const mx = Math.max(...arr.map(a => a[1])); return arr.map(([l,v,extra]) => ({ l, v: extra || cop(v), w: Math.round(v/mx*100) + '%' })); };
+    const rp = { products: bars([['Día en Islas del Rosario',6840000],['Playa Blanca y Cholón',4930000],['Snorkel en Barú',0]].filter(x => x[1])),
+      channels: bars([['Promotores locales',46,'46%'],['Explorar y Mapa',31,'31%'],['Guía IA',15,'15%'],['Link directo',8,'8%']]),
+      promoters: [['JUAN-CTG','Taxista',9,2740000],['MARIA-HTL','Recepción · Hotel Caribe',7,2180000],['GUIA-CAMILO','Guía certificado',4,1290000],['SANTI-RUTAS','Taxista',3,880000]].map((p,i) => ({ n:String(i+1), code:p[0], type:p[1], sales:p[2], v:cop(p[3]) })),
+      reviews: [{ who:'Sofía G.', stars:'★★★★★', t:'Puntuales en el muelle y el almuerzo estuvo muy bueno. El guía nos explicó todo.', p:'Día en Islas del Rosario · 3 oct' },
+        { who:'Andrés L.', stars:'★★★★☆', t:'La playa es hermosa. La lancha se demoró 20 minutos en salir.', p:'Playa Blanca y Cholón · 2 oct' },
+        { who:'Laura y Daniel', stars:'★★★★★', t:'Lo compramos con el promotor del taxi y todo salió perfecto.', p:'Día en Islas del Rosario · 27 sep' }] };
+
+    const invoices = [['—','Octubre 2026 (en curso)',1318000,'Se emite el 1 nov',false],['FE-TA-0912','Septiembre 2026',758000,'Validada',true],['FE-TA-0847','Agosto 2026',912000,'Validada',true],['FE-TA-0781','Julio 2026',644000,'Validada',true]]
+      .map(([no,period,base,stx,ready]) => ({ no, period, base:cop(base), iva:cop(base*.19), total:cop(base*1.19), st:stx, ready, stBg: ready ? '#DDECE2' : '#F1F2F4', stColor: ready ? '#1f5a3f' : '#455073' }));
+
+    const simBooking = () => { const id = 'TA-' + Math.random().toString(36).slice(2,6).toUpperCase();
+      const nb = { id, name:'Valentina Gómez', phone:'+57 311 902 3345', pid:'ros', date:'Dom 18 oct', qty:2, pay:[['Wallet Viatto',760000]], promo:'JUAN-CTG', status:'new', left:'24 h' };
+      this.setState(x => ({ bookings:[nb, ...x.bookings], selId:id, filter:'all', notif:'Valentina Gómez · Islas del Rosario · 2 personas · 18 oct. Confírmala en 24 h.' }));
+      clearTimeout(this.nt); this.nt = setTimeout(() => this.setState({ notif:null }), 5000); };
+
+    return { s, side, head, onbSteps, o, f, docs, cats, products, ed, bk, d, py, rp, invoices,
+      voucher: st.voucher, onVoucher: e => this.setState({ voucher: e.target.value }),
+      newProduct: () => this.setState({ sec:'editor', editId:null, ed: emptyEd() }),
+      simBooking, notif: st.notif, toast: st.toast, dl: () => this.say('Descargando factura…') };
+  }
+}
+</script>
+</body>
+</html>

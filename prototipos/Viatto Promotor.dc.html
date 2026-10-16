@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html{color-scheme:light}input,select,textarea{background-color:#fff;color:#062A1C}
+body{margin:0;background:#062A1C;font-family:Poppins,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0A7A43}a:hover{color:#075C33}
+*{box-sizing:border-box}
+button,input,select,textarea{font-family:inherit}
+@keyframes ta-fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes ta-spin{to{transform:rotate(360deg)}}
+select{appearance:none;-webkit-appearance:none}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #0A8F4E;outline-offset:2px}
+.ta-scroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:center;padding:32px 20px;font-family:Poppins,sans-serif">
+
+  <div style="width:230px;display:flex;flex-direction:column;gap:2px;color:#fff">
+    <img src="assets/logo_dark.png" alt="Viatto" style="width:150px;margin:0 0 6px -10px">
+    <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin-bottom:4px">MVP · Promotor local</div>
+    <a href="Viatto App.dc.html" style="font-size:12px;color:#9FF0C6;margin:0 0 8px 10px">← Volver a la app del viajero</a>
+    <sc-for list="{{ index }}" as="it" hint-placeholder-count="14">
+      <sc-if value="{{ it.group }}" hint-placeholder-val="{{ false }}"><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin:10px 0 2px 10px">{{ it.group }}</div></sc-if>
+      <button onClick="{{ it.go }}" style="display:flex;gap:10px;align-items:center;text-align:left;background:{{ it.bg }};color:{{ it.color }};border:0;border-radius:10px;padding:6px 10px;font:500 13px Poppins,sans-serif;cursor:pointer">
+        <span style="font-size:11px;opacity:.6;width:22px">{{ it.n }}</span><span>{{ it.label }}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="position:relative;width:402px;height:874px;flex:none;border-radius:56px;background:#fff;overflow:hidden;box-shadow:0 0 0 11px #1c1c1e,0 0 0 13px #3a3a3c,0 40px 80px rgba(0,0,0,.6)">
+    <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:122px;height:36px;border-radius:20px;background:#000;z-index:50"></div>
+
+    <!-- P1 Intro -->
+    <sc-if value="{{ s.intro }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="P1 Quiero ser promotor" style="position:absolute;inset:0;background:#062A1C;color:#fff;display:flex;flex-direction:column;padding:66px 26px 34px">
+        <div style="position:absolute;left:0;right:0;top:0;height:320px;background:radial-gradient(90% 70% at 70% 0%,rgba(10,143,78,.55),transparent 70%)"></div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:space-between">
+          <a href="Viatto App.dc.html" aria-label="Cerrar" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg></a>
+          <img src="assets/logo_dark.png" alt="Viatto" style="width:120px">
+        </div>
+        <div style="position:relative;margin-top:70px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#9FF0C6">Promotor local · Cartagena</div>
+        <div style="position:relative;font-size:32px;line-height:1.15;font-weight:600;margin-top:8px">Recomienda planes<br>y <span style="color:#0A8F4E">gana dos veces</span></div>
+        <p style="position:relative;margin:14px 0 0;font-size:14px;line-height:1.6;color:#DCEBE3">Para taxistas, recepcionistas y guías. Comparte tu QR con los turistas que llegan a la ciudad.</p>
+        <div style="position:relative;display:flex;flex-direction:column;gap:10px;margin-top:26px">
+          <div style="display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.07);border-radius:16px;padding:14px"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:#0A8F4E;display:flex;align-items:center;justify-content:center;font-weight:600">1</span><span style="font-size:13px;line-height:1.45"><b style="font-weight:600">Comisión por cada venta</b><br><span style="color:#B9D3C6">Ves cuánto ganas en cada experiencia antes de venderla.</span></span></div>
+          <div style="display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.07);border-radius:16px;padding:14px"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:#0A8F4E;display:flex;align-items:center;justify-content:center;font-weight:600">2</span><span style="font-size:13px;line-height:1.45"><b style="font-weight:600">Residual por 12 meses</b><br><span style="color:#B9D3C6">Ganas un % de lo que ese viajero compre después en Viatto.</span></span></div>
+        </div>
+        <button onClick="{{ go.form }}" style="position:relative;margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer" style-hover="background:#087A42">Quiero ser promotor</button>
+        <div style="position:relative;text-align:center;font-size:11.5px;color:#8FB0A0;margin-top:12px">Invitado por <b style="color:#fff;font-weight:500">Heroica Tours</b> · código HEROICA</div>
+      </div>
+    </sc-if>
+
+    <!-- P1 Perfil -->
+    <sc-if value="{{ s.form }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P1 Perfil de promotor" class="ta-scroll" style="position:absolute;inset:0;background:#fff;overflow-y:auto;scrollbar-width:none;padding:54px 20px 30px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ back }}" aria-label="Volver" style="background:none;border:0;padding:4px;cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+          <span style="font-size:20px;font-weight:600;color:#062A1C">Tu perfil de promotor</span>
+        </div>
+        <div style="display:flex;gap:5px"><span style="width:22px;height:5px;border-radius:3px;background:#0A8F4E"></span><span style="width:5px;height:5px;border-radius:3px;background:#D6E5DD"></span><span style="width:5px;height:5px;border-radius:3px;background:#D6E5DD"></span></div>
+        <div style="font-size:13px;font-weight:600;color:#062A1C;margin-top:4px">¿A qué te dedicas?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ tipos }}" as="t" hint-placeholder-count="4">
+            <button onClick="{{ t.pick }}" style="height:64px;border-radius:14px;border:1.5px solid {{ t.border }};background:{{ t.bg }};display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 14px;cursor:pointer;text-align:left">
+              <span style="font-size:14px;font-weight:600;color:#062A1C">{{ t.label }}</span><span style="font-size:11px;color:#455073">{{ t.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#062A1C;margin-top:6px">Ciudad y zona</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;height:50px;border:1px solid #d6d8de;border-radius:14px;padding:0 14px;display:flex;flex-direction:column;justify-content:center;background:#F1F2F4"><span style="font-size:10.5px;color:#6b7186">Ciudad</span><span style="font-size:14px;color:#062A1C">Cartagena</span></div>
+          <div style="flex:1.3;position:relative">
+            <select value="{{ zona }}" onChange="{{ onZona }}" style="width:100%;height:50px;border:1px solid #d6d8de;border-radius:14px;padding:0 40px 0 14px;font:400 14px Poppins,sans-serif;color:#062A1C;background:#fff;cursor:pointer">
+              <sc-for list="{{ zonas }}" as="z" hint-placeholder-count="5"><option value="{{ z }}">{{ z }}</option></sc-for>
+            </select>
+            <span style="position:absolute;right:12px;top:12px;width:26px;height:26px;border-radius:50%;background:#0A8F4E;display:flex;align-items:center;justify-content:center;pointer-events:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#062A1C;margin-top:6px">¿Dónde recibes tus pagos?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <sc-for list="{{ cuentas }}" as="c" hint-placeholder-count="3">
+            <button onClick="{{ c.pick }}" style="height:44px;border-radius:12px;border:1.5px solid {{ c.border }};background:{{ c.bg }};color:#062A1C;font:500 13px Poppins,sans-serif;cursor:pointer">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <input value="{{ cuentaNum }}" onChange="{{ onCuenta }}" placeholder="{{ cuentaPh }}" style="height:50px;border:1px solid #d6d8de;border-radius:14px;padding:0 16px;font:400 14px Poppins,sans-serif;color:#062A1C">
+        <p style="margin:0;font-size:11.5px;line-height:1.5;color:#6b7186">La cuenta debe estar a tu nombre. Las comisiones liberadas llegan a tu billetera cada lunes.</p>
+        <button onClick="{{ go.kyc }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;flex:none" style-hover="background:#087A42">Continuar</button>
+      </div>
+    </sc-if>
+
+    <!-- P1 KYC -->
+    <sc-if value="{{ s.kyc }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P1 KYC y antecedentes" style="position:absolute;inset:0;background:#fff;padding:54px 20px 30px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ back }}" aria-label="Volver" style="background:none;border:0;padding:4px;cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+          <span style="font-size:20px;font-weight:600;color:#062A1C">Verificación</span>
+        </div>
+        <div style="display:flex;gap:5px"><span style="width:5px;height:5px;border-radius:3px;background:#0A8F4E"></span><span style="width:22px;height:5px;border-radius:3px;background:#0A8F4E"></span><span style="width:5px;height:5px;border-radius:3px;background:#D6E5DD"></span></div>
+        <p style="margin:0;font-size:13.5px;line-height:1.55;color:#455073">Los turistas confían en los promotores verificados. Validamos tu identidad y tus antecedentes.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <sc-for list="{{ kycSteps }}" as="k" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:{{ k.bg }};border:1px solid {{ k.border }}">
+              <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ k.dot }};color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ k.mark }}</span>
+              <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600;color:#062A1C">{{ k.title }}</span><span style="font-size:12px;color:#455073">{{ k.sub }}</span></div>
+              <span style="font-size:11.5px;font-weight:600;color:{{ k.stColor }}">{{ k.status }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:#455073;margin-top:4px"><input type="checkbox" checked="{{ consent }}" onChange="{{ toggleConsent }}" style="margin-top:3px;accent-color:#0A8F4E">Autorizo la consulta de mis antecedentes y el tratamiento de mis datos personales (Ley 1581 de 2012).</label>
+        <button onClick="{{ runKyc }}" disabled="{{ kycDisabled }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;opacity:{{ kycOpacity }}">{{ kycCta }}</button>
+      </div>
+    </sc-if>
+
+    <!-- P1 En revisión -->
+    <sc-if value="{{ s.review }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P1 En revisión" style="position:absolute;inset:0;background:#fff;padding:90px 26px 34px;display:flex;flex-direction:column">
+        <span style="width:72px;height:72px;border-radius:50%;background:{{ rv.iconBg }};display:flex;align-items:center;justify-content:center">{{ rv.icon }}</span>
+        <div style="font-size:26px;font-weight:600;color:#062A1C;margin-top:22px;line-height:1.2">{{ rv.title }}</div>
+        <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#455073">{{ rv.body }}</p>
+        <div style="margin-top:24px;border-radius:18px;border:1px solid #e7e8ec;padding:6px 16px">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f1f4;font-size:13px"><span style="color:#455073">Tipo</span><b style="font-weight:600;color:#062A1C">{{ tipo }}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f1f4;font-size:13px"><span style="color:#455073">Zona</span><b style="font-weight:600;color:#062A1C">{{ zona }}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:13px"><span style="color:#455073">Pagos</span><b style="font-weight:600;color:#062A1C">{{ cuenta }}</b></div>
+        </div>
+        <button onClick="{{ rv.cta }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer" style-hover="background:#087A42">{{ rv.ctaLabel }}</button>
+        <sc-if value="{{ rv.pending }}" hint-placeholder-val="{{ true }}"><div style="text-align:center;font-size:11.5px;color:#6b7186;margin-top:10px">Prototipo: este botón simula la aprobación del equipo de Viatto.</div></sc-if>
+      </div>
+    </sc-if>
+
+    <!-- Panel -->
+    <sc-if value="{{ s.panel }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P4 Panel del promotor" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none;background:#fff">
+        <div style="padding:58px 20px 0;display:flex;align-items:center;gap:12px">
+          <img src="assets/av_juan.png" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+          <div style="flex:1;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:16px;font-weight:600;color:#062A1C">Hola, Juan</span><span style="font-size:11.5px;color:#2E6A4E;font-weight:500">✓ Promotor verificado · {{ zona }}</span></div>
+        </div>
+        <div style="margin:16px 14px 0;border-radius:24px;background:#062A1C;color:#fff;padding:20px;position:relative;overflow:hidden">
+          <span style="position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#0E9F57 0%,transparent 70%)"></span>
+          <div style="position:relative;font-size:12px;color:#B9D3C6">Ganancias de octubre</div>
+          <div style="position:relative;font-size:32px;font-weight:600;letter-spacing:-.5px">{{ e.total }}</div>
+          <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px">
+            <div style="background:rgba(255,255,255,.08);border-radius:14px;padding:10px"><div style="font-size:10.5px;color:#B9D3C6">Liberado</div><div style="font-size:14px;font-weight:600">{{ e.released }}</div></div>
+            <div style="background:rgba(255,255,255,.08);border-radius:14px;padding:10px"><div style="font-size:10.5px;color:#B9D3C6">Pendiente</div><div style="font-size:14px;font-weight:600">{{ e.pending }}</div></div>
+            <div style="background:rgba(255,255,255,.08);border-radius:14px;padding:10px"><div style="font-size:10.5px;color:#B9D3C6">Residual</div><div style="font-size:14px;font-weight:600">{{ e.residual }}</div></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 14px 0">
+          <button onClick="{{ go.qr }}" style="height:56px;border:0;border-radius:16px;background:#0A8F4E;color:#fff;font:600 13.5px Poppins,sans-serif;cursor:pointer;display:flex;align-items:center;gap:10px;padding:0 16px" style-hover="background:#087A42"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"></path></svg>Mostrar mi QR</button>
+          <button onClick="{{ go.catalog }}" style="height:56px;border:0;border-radius:16px;background:#F1F2F4;color:#062A1C;font:600 13.5px Poppins,sans-serif;cursor:pointer;display:flex;align-items:center;gap:10px;padding:0 16px" style-hover="background:#e7e8ec"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A8F4E" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg>Vender ahora</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 14px 0">
+          <div style="border-radius:16px;border:1px solid #e7e8ec;padding:12px"><div style="font-size:20px;font-weight:700;color:#062A1C">{{ k.sales }}</div><div style="font-size:11px;color:#455073">Ventas del mes</div></div>
+          <div style="border-radius:16px;border:1px solid #e7e8ec;padding:12px"><div style="font-size:20px;font-weight:700;color:#062A1C">{{ k.travelers }}</div><div style="font-size:11px;color:#455073">Viajeros captados</div></div>
+          <div style="border-radius:16px;border:1px solid #e7e8ec;padding:12px"><div style="font-size:20px;font-weight:700;color:#062A1C">#4</div><div style="font-size:11px;color:#455073">De 86 en la ciudad</div></div>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding:22px 22px 8px"><span style="font-size:16px;font-weight:600;color:#062A1C">Últimas ventas</span><a onClick="{{ go.payouts }}" style="font-size:12.5px;font-weight:500;cursor:pointer">Ver cobros</a></div>
+        <div style="display:flex;flex-direction:column;padding:0 22px 20px">
+          <sc-for list="{{ sales }}" as="v" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f1f4">
+              <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ v.bg }};color:{{ v.color }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ v.glyph }}</span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:13px;color:#062A1C">{{ v.title }}</span><span style="font-size:11px;color:#6b7186">{{ v.who }} · {{ v.date }}</span></div>
+              <div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.3"><span style="font-size:13.5px;font-weight:600;color:#062A1C">+ {{ v.amt }}</span><span style="font-size:10.5px;font-weight:600;color:{{ v.stColor }}">{{ v.status }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Mi QR -->
+    <sc-if value="{{ s.qr }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P2 Mi QR y mi link" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none;background:#062A1C;color:#fff;padding:58px 22px 20px;display:flex;flex-direction:column;align-items:center">
+        <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#9FF0C6">Tu código de promotor</div>
+        <div style="font-size:30px;font-weight:700;letter-spacing:1px;margin-top:4px">JUAN-CTG</div>
+        <div style="margin-top:18px;background:#fff;border-radius:24px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px">
+          <img src="assets/qr_example.png" alt="Mi código QR" style="width:200px;height:200px;display:block">
+          <img src="assets/logo.png" alt="Viatto" style="width:96px">
+        </div>
+        <div style="margin-top:14px;font-size:12.5px;color:#B9D3C6;text-align:center;line-height:1.5">El turista escanea, abre Viatto y queda ligado a ti por 12 meses.</div>
+        <div style="width:100%;margin-top:16px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:14px;padding:12px 14px">
+          <span style="flex:1;font-size:13px;color:#fff">viatto.co/p/JUAN-CTG</span>
+          <button onClick="{{ copyLink }}" style="border:0;border-radius:10px;background:#fff;color:#062A1C;padding:6px 12px;font:600 12px Poppins,sans-serif;cursor:pointer">Copiar</button>
+        </div>
+        <button onClick="{{ shareWa }}" style="width:100%;margin-top:10px;height:50px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 14.5px Poppins,sans-serif;cursor:pointer" style-hover="background:#087A42">Compartir por WhatsApp</button>
+        <button onClick="{{ go.kit }}" style="width:100%;margin-top:14px;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:transparent;color:#fff;padding:14px 16px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="flex:1;display:flex;flex-direction:column;line-height:1.4"><span style="font-size:14px;font-weight:600">Kit de promotor</span><span style="font-size:12px;color:#B9D3C6">{{ kitStatus }}</span></span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+      </div>
+    </sc-if>
+
+    <!-- Kit -->
+    <sc-if value="{{ s.kit }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P2 Kit físico" class="ta-scroll" style="position:absolute;inset:0;background:#fff;overflow-y:auto;scrollbar-width:none;padding:54px 20px 30px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ back }}" aria-label="Volver" style="background:none;border:0;padding:4px;cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+          <span style="font-size:20px;font-weight:600;color:#062A1C">Kit de promotor</span>
+        </div>
+        <p style="margin:0;font-size:13.5px;line-height:1.55;color:#455073">Material con tu QR para que los turistas te encuentren. Es gratis.</p>
+        <sc-for list="{{ kitItems }}" as="it" hint-placeholder-count="3">
+          <button onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;border:1.5px solid {{ it.border }};background:{{ it.bg }};cursor:pointer;text-align:left">
+            <span style="flex:none;width:52px;height:52px;border-radius:12px;background:#062A1C;color:#0A8F4E;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">{{ it.tag }}</span>
+            <span style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600;color:#062A1C">{{ it.title }}</span><span style="font-size:12px;color:#455073">{{ it.sub }}</span></span>
+            <span style="width:24px;height:24px;border-radius:6px;border:2px solid #0A8F4E;background:{{ it.check }};display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
+          </button>
+        </sc-for>
+        <input placeholder="Dirección de entrega en Cartagena" value="{{ kitAddr }}" onChange="{{ onKitAddr }}" style="height:50px;border:1px solid #d6d8de;border-radius:14px;padding:0 16px;font:400 14px Poppins,sans-serif;color:#062A1C">
+        <button onClick="{{ requestKit }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;flex:none" style-hover="background:#087A42">Solicitar kit</button>
+      </div>
+    </sc-if>
+
+    <!-- Catálogo -->
+    <sc-if value="{{ s.catalog }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P2 Catálogo para vender" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none;background:#fff">
+        <div style="padding:58px 22px 0;display:flex;flex-direction:column;line-height:1.2"><span style="font-size:11.5px;color:#0A7A43;font-weight:600">Para vender en {{ zona }}</span><span style="font-size:24px;font-weight:600;color:#062A1C">Catálogo</span></div>
+        <div class="ta-scroll" style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 18px 6px">
+          <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="4">
+            <button onClick="{{ c.pick }}" style="flex:none;height:34px;padding:0 14px;border-radius:17px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 12.5px Poppins,sans-serif;cursor:pointer">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:8px 14px 20px">
+          <sc-for list="{{ catalog }}" as="p" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;border:1px solid #e7e8ec">
+              <button onClick="{{ p.open }}" aria-label="Ver ficha del plan" style="flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:0;text-align:left;cursor:pointer">
+              <div style="flex:none;width:58px;height:58px;border-radius:12px;background:#DDF7E9;overflow:hidden"><sc-if value="{{ p.img }}" hint-placeholder-val="{{ false }}"><img src="{{ p.img }}" alt="" style="width:100%;height:100%;object-fit:cover"></sc-if></div>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3;gap:2px">
+                <span style="font-size:13.5px;font-weight:600;color:#062A1C">{{ p.title }}</span>
+                <span style="font-size:11.5px;color:#455073">{{ p.priceCash }} · {{ p.op }}</span>
+                <span style="align-self:flex-start;font-size:11px;font-weight:600;background:#DDECE2;color:#1f5a3f;border-radius:8px;padding:1px 8px">Ganas {{ p.earn }} ({{ p.pct }})</span>
+                <span style="font-size:11px;font-weight:600;color:#0A7A43">Ver ficha completa ›</span>
+              </div>
+              </button>
+              <button onClick="{{ p.sell }}" style="flex:none;height:38px;border:0;border-radius:12px;background:#0A8F4E;color:#fff;padding:0 14px;font:600 12.5px Poppins,sans-serif;cursor:pointer">Vender</button>
+            </div>
+          </sc-for>
+          <div style="font-size:11px;color:#6b7186;padding:4px 4px 0">Comisiones de ejemplo, definidas por cada operador. Se liberan cuando el servicio se presta.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Ficha del plan -->
+    <sc-if value="{{ s.plan }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P2 Ficha del plan" style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column">
+        <div class="ta-scroll" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none">
+          <div style="position:relative;height:250px;background:linear-gradient(160deg,#0A8F4E,#062A1C)">
+            <sc-if value="{{ plan.img }}" hint-placeholder-val="{{ false }}"><img src="{{ plan.img }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></sc-if>
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,42,28,.35) 0%,transparent 35%,rgba(6,42,28,.75) 100%)"></div>
+            <button onClick="{{ back }}" aria-label="Volver" style="position:absolute;top:54px;left:16px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.92);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+            <button onClick="{{ shareWa }}" aria-label="Compartir" style="position:absolute;top:54px;right:16px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.92);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"></path></svg></button>
+            <div style="position:absolute;left:18px;right:18px;bottom:16px;color:#fff;display:flex;flex-direction:column;gap:4px">
+              <span style="align-self:flex-start;font-size:11px;font-weight:600;background:rgba(255,255,255,.2);border-radius:8px;padding:2px 9px">{{ plan.cat }}</span>
+              <span style="font-size:22px;font-weight:600;line-height:1.2">{{ plan.title }}</span>
+              <span style="font-size:12.5px;opacity:.95">★ {{ plan.rating }} · {{ plan.reviews }} reseñas · {{ plan.op }}</span>
+            </div>
+          </div>
+
+          <div style="margin:14px 14px 0;border-radius:18px;background:#062A1C;color:#fff;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;flex-direction:column"><span style="font-size:11px;color:#B9D3C6">Precio por persona</span><span style="font-size:19px;font-weight:600">{{ plan.priceCash }}</span></div>
+            <div style="display:flex;flex-direction:column"><span style="font-size:11px;color:#B9D3C6">Tú ganas por persona</span><span style="font-size:19px;font-weight:600;color:#7CE3A8">{{ plan.earn }} ({{ plan.pct }})</span></div>
+            <div style="grid-column:1/-1;font-size:11.5px;color:#B9D3C6;line-height:1.45">Más 2% residual de lo que este viajero compre en los próximos 12 meses.</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 14px 0">
+            <sc-for list="{{ plan.facts }}" as="f" hint-placeholder-count="4">
+              <div style="border-radius:14px;background:#F1F2F4;padding:10px 12px;display:flex;flex-direction:column;gap:1px"><span style="font-size:10.5px;color:#6b7186">{{ f.k }}</span><span style="font-size:13px;font-weight:600;color:#062A1C;line-height:1.35">{{ f.v }}</span></div>
+            </sc-for>
+          </div>
+
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:15px;font-weight:600;color:#062A1C">Descripción</span>
+            <p style="margin:0;font-size:13px;line-height:1.6;color:#455073;text-wrap:pretty">{{ plan.desc }}</p>
+          </div>
+
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:15px;font-weight:600;color:#062A1C">Itinerario</span>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ plan.itin }}" as="it" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px">
+                  <div style="flex:none;width:12px;display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#0A8F4E;margin-top:5px"></span><span style="flex:1;width:2px;background:{{ it.line }}"></span></div>
+                  <div style="flex:1;display:flex;gap:10px;padding-bottom:12px"><b style="flex:none;width:44px;font-size:12.5px;font-weight:600;color:#062A1C">{{ it.t }}</b><span style="font-size:13px;line-height:1.5;color:#455073">{{ it.d }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px 0">
+            <div style="border-radius:16px;background:#EEF8F2;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12.5px;font-weight:600;color:#1f5a3f">Incluye</span>
+              <sc-for list="{{ plan.incl }}" as="x" hint-placeholder-count="3"><span style="font-size:12px;line-height:1.4;color:#062A1C">✓ {{ x }}</span></sc-for>
+            </div>
+            <div style="border-radius:16px;background:#F6F3F1;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12.5px;font-weight:600;color:#455073">No incluye</span>
+              <sc-for list="{{ plan.excl }}" as="x" hint-placeholder-count="2"><span style="font-size:12px;line-height:1.4;color:#062A1C">— {{ x }}</span></sc-for>
+            </div>
+          </div>
+
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:15px;font-weight:600;color:#062A1C">Qué llevar</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ plan.bring }}" as="x" hint-placeholder-count="4"><span style="font-size:12px;padding:4px 10px;border-radius:12px;border:1px solid #d6d8de;color:#062A1C">{{ x }}</span></sc-for></div>
+          </div>
+
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:15px;font-weight:600;color:#062A1C">Tips para venderlo</span>
+            <sc-for list="{{ plan.tips }}" as="x" hint-placeholder-count="2"><div style="display:flex;gap:10px;font-size:12.5px;line-height:1.5;color:#455073"><span style="flex:none;color:#0A8F4E;font-weight:700">›</span><span>{{ x }}</span></div></sc-for>
+          </div>
+
+          <div style="margin:18px 14px 0;border-radius:16px;border:1px solid #e7e8ec;padding:4px 14px">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0f1f4;font-size:12.5px"><span style="color:#455073">Cancelación</span><span style="text-align:right;color:#062A1C;font-weight:500">{{ plan.policy }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0f1f4;font-size:12.5px"><span style="color:#455073">Opera</span><span style="text-align:right;color:#062A1C;font-weight:500">{{ plan.days }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:12.5px"><span style="color:#455073">Operador</span><span style="text-align:right;color:#062A1C;font-weight:500">{{ plan.op }} · RNT {{ plan.rnt }} ✓</span></div>
+          </div>
+          <div style="height:20px"></div>
+        </div>
+        <div style="flex:none;display:flex;gap:10px;padding:12px 16px 26px;border-top:1px solid #eef0f3;background:#fff">
+          <button onClick="{{ shareWa }}" style="flex:1;height:50px;border:1.5px solid #0A8F4E;border-radius:14px;background:#fff;color:#0A7A43;font:600 13.5px Poppins,sans-serif;cursor:pointer">Enviar ficha</button>
+          <button onClick="{{ plan.sell }}" style="flex:1.4;height:50px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 14.5px Poppins,sans-serif;cursor:pointer">Vender este plan</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Venta asistida -->
+    <sc-if value="{{ s.sell }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P3 Venta asistida" class="ta-scroll" style="position:absolute;inset:0;background:#fff;overflow-y:auto;scrollbar-width:none;padding:54px 20px 30px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ back }}" aria-label="Volver" style="background:none;border:0;padding:4px;cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+          <span style="font-size:20px;font-weight:600;color:#062A1C">Venta asistida</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;border:1px solid #e7e8ec">
+          <div style="width:56px;height:56px;border-radius:12px;background:#DDF7E9;overflow:hidden;flex:none"><sc-if value="{{ prod.img }}" hint-placeholder-val="{{ false }}"><img src="{{ prod.img }}" alt="" style="width:100%;height:100%;object-fit:cover"></sc-if></div>
+          <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600;color:#062A1C">{{ prod.title }}</span><span style="font-size:11.5px;color:#455073">{{ prod.priceCash }} por persona</span></div>
+          <button onClick="{{ go.catalog }}" style="border:0;background:none;color:#0A7A43;font:600 12px Poppins,sans-serif;cursor:pointer">Cambiar</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:#F1F2F4">
+          <span style="font-size:13.5px;color:#062A1C">Personas</span>
+          <div style="display:flex;align-items:center;gap:14px">
+            <button onClick="{{ dec }}" aria-label="Menos" style="width:34px;height:34px;border-radius:50%;border:1.5px solid #0A8F4E;background:#fff;color:#0A7A43;font:600 18px Poppins,sans-serif;cursor:pointer">−</button>
+            <span style="font-size:16px;font-weight:600;color:#062A1C;min-width:16px;text-align:center">{{ qty }}</span>
+            <button onClick="{{ inc }}" aria-label="Más" style="width:34px;height:34px;border-radius:50%;border:0;background:#0A8F4E;color:#fff;font:600 18px Poppins,sans-serif;cursor:pointer">+</button>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#062A1C;margin-top:4px">Datos del turista</div>
+        <input value="{{ tName }}" onChange="{{ onTName }}" placeholder="Nombre" style="height:48px;border:1px solid #d6d8de;border-radius:14px;padding:0 16px;font:400 14px Poppins,sans-serif;color:#062A1C">
+        <input value="{{ tPhone }}" onChange="{{ onTPhone }}" placeholder="WhatsApp (ej. +57 300 000 0000)" style="height:48px;border:1px solid #d6d8de;border-radius:14px;padding:0 16px;font:400 14px Poppins,sans-serif;color:#062A1C">
+        <sc-if value="{{ attrWarn }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:12px 14px;border-radius:14px;background:#F6EACB;font-size:12px;line-height:1.5;color:#6b4708">Este viajero ya está ligado a otro promotor. Ganas la comisión de esta venta, pero no el residual.</div>
+        </sc-if>
+        <div style="border-radius:16px;border:1px solid #e7e8ec;padding:6px 14px">
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f1f4;font-size:13px"><span style="color:#455073">Total para el turista</span><b style="font-weight:600;color:#062A1C">{{ sellTotal }}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;font-size:13px"><span style="color:#455073">Tu comisión</span><b style="font-weight:600;color:#2E6A4E">+ {{ sellEarn }}</b></div>
+        </div>
+        <button onClick="{{ genLink }}" disabled="{{ noTourist }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;flex:none;opacity:{{ sellOpacity }}">Generar link de pago</button>
+      </div>
+    </sc-if>
+
+    <!-- Link listo -->
+    <sc-if value="{{ s.link }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P3 Link de pago" style="position:absolute;inset:0;background:#fff;padding:54px 20px 30px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ go.panel }}" aria-label="Cerrar" style="background:none;border:0;padding:4px;cursor:pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+          <span style="font-size:20px;font-weight:600;color:#062A1C">Link de pago</span>
+        </div>
+        <div style="margin-top:10px;border-radius:22px;background:#062A1C;color:#fff;padding:20px;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;color:#B9D3C6">Para {{ lk.name }} · {{ lk.phone }}</span>
+          <span style="font-size:18px;font-weight:600">{{ lk.title }} · {{ lk.qty }}</span>
+          <span style="font-size:28px;font-weight:600">{{ lk.total }}</span>
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;margin-top:8px"><span style="flex:1;font-size:12.5px">{{ lk.url }}</span><button onClick="{{ copyLink }}" style="border:0;border-radius:8px;background:#fff;color:#062A1C;padding:4px 10px;font:600 11.5px Poppins,sans-serif;cursor:pointer">Copiar</button></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:{{ lk.stBg }}">
+          <span style="flex:none;width:12px;height:12px;border-radius:50%;background:{{ lk.dot }}"></span>
+          <span style="flex:1;font-size:13px;color:#062A1C;line-height:1.4"><b style="font-weight:600">{{ lk.status }}</b><br><span style="color:#455073;font-size:12px">{{ lk.statusSub }}</span></span>
+        </div>
+        <button onClick="{{ shareWa }}" style="height:50px;border:1.5px solid #0A8F4E;border-radius:14px;background:#fff;color:#0A7A43;font:600 14px Poppins,sans-serif;cursor:pointer">Enviar por WhatsApp</button>
+        <button onClick="{{ simulatePaid }}" disabled="{{ lk.paid }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;opacity:{{ lk.btnOpacity }}">{{ lk.btn }}</button>
+      </div>
+    </sc-if>
+
+    <!-- Viajeros -->
+    <sc-if value="{{ s.travelers }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P3 Mis viajeros" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none;background:#fff">
+        <div style="padding:58px 22px 0;font-size:24px;font-weight:600;color:#062A1C">Mis viajeros</div>
+        <p style="margin:6px 22px 0;font-size:12.5px;line-height:1.5;color:#455073">Ganas residual por lo que compren en Viatto mientras dure su atribución.</p>
+        <div style="display:flex;flex-direction:column;padding:12px 22px 20px">
+          <sc-for list="{{ tlist }}" as="t" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f1f4">
+              <span style="flex:none;width:40px;height:40px;border-radius:50%;background:#DDF7E9;color:#075C33;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ t.ini }}</span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:13.5px;font-weight:500;color:#062A1C">{{ t.name }}</span><span style="font-size:11px;color:#6b7186">{{ t.sub }}</span></div>
+              <div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.3"><span style="font-size:13px;font-weight:600;color:#062A1C">{{ t.earned }}</span><span style="font-size:10.5px;color:#6b7186">{{ t.until }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Cobros -->
+    <sc-if value="{{ s.payouts }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="P5 Liquidación a billetera" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none;background:#fff">
+        <div style="padding:58px 22px 0;font-size:24px;font-weight:600;color:#062A1C">Cobros</div>
+        <div style="margin:14px 14px 0;border-radius:22px;background:#DDECE2;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;color:#1f5a3f">Disponible para retirar</span>
+          <span style="font-size:30px;font-weight:600;color:#062A1C">{{ p.available }}</span>
+          <span style="font-size:12px;color:#1f5a3f">Próxima liquidación: lunes 12 oct · {{ e.pending }} pendientes</span>
+          <button onClick="{{ withdraw }}" disabled="{{ p.empty }}" style="margin-top:10px;height:46px;border:0;border-radius:12px;background:#062A1C;color:#fff;font:600 14px Poppins,sans-serif;cursor:pointer;opacity:{{ p.btnOpacity }}">Retirar a {{ cuenta }}</button>
+        </div>
+        <div style="margin:12px 14px 0;padding:12px 14px;border-radius:14px;background:#F1F2F4;font-size:12px;line-height:1.5;color:#455073">Las comisiones quedan <b style="color:#062A1C;font-weight:600">pendientes</b> hasta que el operador confirma el servicio con el QR del viajero. Luego se liberan en la liquidación semanal.</div>
+        <div style="padding:22px 22px 8px;font-size:16px;font-weight:600;color:#062A1C">Historial</div>
+        <div style="display:flex;flex-direction:column;padding:0 22px 20px">
+          <sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f1f4">
+              <div style="flex:1;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:13px;color:#062A1C">{{ h.t }}</span><span style="font-size:11px;color:#6b7186">{{ h.d }}</span></div>
+              <span style="font-size:13.5px;font-weight:600;color:{{ h.color }}">{{ h.amt }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Nav -->
+    <sc-if value="{{ s.nav }}" hint-placeholder-val="{{ false }}">
+      <nav style="position:absolute;left:0;right:0;bottom:0;height:82px;background:#fff;border-top:1px solid #eef0f3;display:grid;grid-template-columns:repeat(5,1fr);padding:10px 8px 0;z-index:10">
+        <button onClick="{{ go.panel }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.panel }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>Panel</button>
+        <button onClick="{{ go.catalog }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.catalog }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Vender</button>
+        <button onClick="{{ go.qr }}" aria-label="Mi QR" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:{{ nav.qr }}"><span style="margin-top:-22px;width:54px;height:54px;border-radius:50%;background:#0A8F4E;box-shadow:0 0 0 5px #fff;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3h-3zM17 20h4v-3"></path></svg></span>Mi QR</button>
+        <button onClick="{{ go.travelers }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.travelers }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"></path></svg>Viajeros</button>
+        <button onClick="{{ go.payouts }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.payouts }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2.5M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>Cobros</button>
+      </nav>
+    </sc-if>
+
+    <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:50%;bottom:100px;transform:translateX(-50%);z-index:60;background:#062A1C;color:#fff;font-size:12.5px;padding:10px 18px;border-radius:20px;white-space:nowrap;animation:ta-fade .2s ease">{{ toast }}</div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const PRODUCTS = [
+  { id:'ros', cat:'Islas', title:'Día en Islas del Rosario', img:'assets/beach.png', price:380000, op:'Náutica Bahía', pct:10 },
+  { id:'pbl', cat:'Islas', title:'Playa Blanca y Cholón', img:null, price:290000, op:'Náutica Bahía', pct:10 },
+  { id:'tierra', cat:'Islas', title:'Bocachica y Tierra Bomba', img:null, price:160000, op:'Bahía Viva', pct:12 },
+  { id:'city', cat:'Ciudad', title:'Ciudad Amurallada y San Felipe', img:null, price:120000, op:'Heroica Tours', pct:15 },
+  { id:'getse', cat:'Ciudad', title:'Getsemaní: arte urbano y sabores', img:'assets/tacos.png', price:150000, op:'Sabores de la Heroica', pct:15 },
+  { id:'chiva', cat:'Ciudad', title:'Chiva rumbera nocturna', img:null, price:90000, op:'Chivas del Caribe', pct:12 },
+  { id:'sunset', cat:'Bahía', title:'Velero al atardecer', img:null, price:260000, op:'Velas del Caribe', pct:10 },
+  { id:'boq', cat:'Naturaleza', title:'Manglares de La Boquilla', img:null, price:140000, op:'Ecotur Boquilla', pct:15 },
+  { id:'totumo', cat:'Naturaleza', title:'Volcán del Totumo', img:null, price:210000, op:'Ecotur Boquilla', pct:12 },
+  { id:'trf', cat:'Servicios', title:'Traslado aeropuerto–hotel', img:null, price:95000, op:'Transportes Heroica', pct:8 },
+];
+const cop = n => '$' + Math.round(n).toLocaleString('es-CO');
+const POL = { flex:'Reembolso total hasta 24 h antes', mod:'100% hasta 72 h antes · 50% hasta 24 h', str:'50% hasta 7 días antes' };
+const DETAILS = {
+  ros:{ dur:'Día completo · 9 h', start:'7:30 a.m.', meet:'Muelle La Bodeguita', cap:'24 cupos/día', rating:'4,8', reviews:312, rnt:'45821', days:'Todos los días', policy:POL.mod,
+    desc:'Lancha rápida al archipiélago de Nuestra Señora del Rosario, uno de los parques naturales del Caribe colombiano. Agua cristalina, acuario y tarde de playa en Isla Grande.',
+    itin:[['7:30','Encuentro y check-in en el Muelle La Bodeguita'],['8:00','Salida en lancha por la bahía y el canal de Bocachica'],['10:00','Visita al Oceanario de Islas del Rosario (opcional)'],['11:00','Playa y snorkel en Isla Grande'],['13:00','Almuerzo típico: pescado, arroz con coco y patacón'],['15:30','Regreso a Cartagena']],
+    incl:['Lancha ida y vuelta','Almuerzo típico','Chaleco salvavidas','Guía bilingüe'], excl:['Impuesto de muelle ($27.000)','Entrada al Oceanario','Equipo de snorkel'],
+    bring:['Bloqueador','Traje de baño','Toalla','Efectivo','Documento'], tips:['El favorito de quien viene por primera vez: véndelo para el día 2 o 3 del viaje.','Recuerda el impuesto de muelle: se paga en efectivo el mismo día.'] },
+  pbl:{ dur:'Día completo · 8 h', start:'8:00 a.m.', meet:'Muelle La Bodeguita', cap:'30 cupos/día', rating:'4,6', reviews:204, rnt:'45821', days:'Viernes a domingo', policy:POL.flex,
+    desc:'Playa Blanca en Barú y la fiesta en el agua de Cholón. Plan de amigos: música, comida de mar y aguas tranquilas.',
+    itin:[['8:00','Salida desde el muelle'],['9:30','Mañana libre en Playa Blanca'],['12:30','Almuerzo de mar'],['14:00','Cholón: piscina natural y botes de comida'],['16:30','Regreso']],
+    incl:['Transporte en lancha','Almuerzo','Carpa y silla en Playa Blanca'], excl:['Bebidas','Impuesto de muelle'],
+    bring:['Bloqueador','Efectivo','Bolsa seca'], tips:['Ideal para grupos de amigos y despedidas.','Fin de semana se llena: ofrece reservar con 2 días de anticipación.'] },
+  tierra:{ dur:'Medio día · 5 h', start:'9:00 a.m.', meet:'Muelle de Los Pegasos', cap:'20 cupos/día', rating:'4,5', reviews:88, rnt:'61207', days:'Martes a domingo', policy:POL.flex,
+    desc:'Cruce de la bahía hasta el fuerte de San Fernando en Bocachica y playa tranquila en Tierra Bomba, a 15 minutos de la ciudad.',
+    itin:[['9:00','Salida en lancha'],['9:30','Visita guiada al Fuerte de San Fernando'],['11:00','Playa en Tierra Bomba'],['13:00','Almuerzo y regreso']],
+    incl:['Lancha','Guía','Entrada al fuerte'], excl:['Almuerzo','Bebidas'],
+    bring:['Bloqueador','Gorra','Agua'], tips:['Buena opción para quien tiene solo medio día libre.'] },
+  city:{ dur:'3 h', start:'8:30 a.m. · 3:30 p.m.', meet:'Torre del Reloj', cap:'18 cupos/salida', rating:'4,9', reviews:540, rnt:'38114', days:'Todos los días', policy:POL.flex,
+    desc:'Recorrido a pie por la Ciudad Amurallada y subida al Castillo San Felipe de Barajas con guía certificado.',
+    itin:[['8:30','Encuentro en la Torre del Reloj'],['8:45','Plaza de los Coches, San Pedro Claver y Santo Domingo'],['10:00','Traslado al Castillo San Felipe'],['10:15','Visita guiada a túneles y baluartes'],['11:30','Fin del recorrido']],
+    incl:['Guía certificado','Entrada al Castillo','Agua'], excl:['Transporte al hotel','Propinas'],
+    bring:['Zapatos cómodos','Gorra','Bloqueador'], tips:['Recomienda la salida de la tarde: hace menos calor.','Perfecto para el día de llegada.'] },
+  getse:{ dur:'3 h', start:'4:00 p.m.', meet:'Plaza de la Trinidad', cap:'14 cupos/salida', rating:'4,8', reviews:176, rnt:'52930', days:'Miércoles a domingo', policy:POL.flex,
+    desc:'Getsemaní a pie: murales, historia del barrio y 5 paradas de comida local, de la arepa de huevo a los jugos de frutas.',
+    itin:[['4:00','Encuentro en la Plaza de la Trinidad'],['4:15','Ruta de arte urbano y murales'],['5:15','Degustación en 5 puestos y restaurantes'],['6:45','Cierre en la plaza al atardecer']],
+    incl:['Guía local','5 degustaciones','Bebida'], excl:['Comidas adicionales'],
+    bring:['Zapatos cómodos','Apetito'], tips:['Los foodies lo aman: menciónalo si preguntan dónde comer.'] },
+  chiva:{ dur:'4 h', start:'8:00 p.m.', meet:'Recogida en el hotel', cap:'40 cupos/noche', rating:'4,4', reviews:395, rnt:'47002', days:'Jueves a sábado', policy:POL.mod,
+    desc:'Bus típico con música en vivo por Bocagrande, el Centro y las murallas, con parada final en una discoteca.',
+    itin:[['8:00','Recogida en el hotel'],['8:30','Recorrido con banda en vivo'],['10:00','Parada en las murallas'],['11:00','Entrada a discoteca']],
+    incl:['Transporte','Banda en vivo','Cover de discoteca','1 coctel'], excl:['Bebidas adicionales','Regreso al hotel'],
+    bring:['Documento','Efectivo'], tips:['Solo mayores de 18 años.','Vende muy bien a grupos grandes.'] },
+  sunset:{ dur:'2 h', start:'5:00 p.m.', meet:'Club de Pesca, Manga', cap:'12 cupos/día', rating:'4,9', reviews:221, rnt:'49377', days:'Todos los días', policy:POL.mod,
+    desc:'Velero por la bahía con la ciudad amurallada al frente durante el atardecer.',
+    itin:[['5:00','Embarque en el Club de Pesca'],['5:20','Navegación por la bahía'],['6:00','Atardecer frente a la ciudad'],['7:00','Regreso al muelle']],
+    incl:['Velero con capitán','Copa de vino o jugo','Pasabocas'], excl:['Traslado al muelle'],
+    bring:['Abrigo ligero','Cámara'], tips:['Infalible para parejas y lunas de miel.','Pocos cupos: ofrece apartarlo apenas lo pidan.'] },
+  boq:{ dur:'3 h', start:'7:00 a.m. · 3:00 p.m.', meet:'La Boquilla, Ciénaga de la Virgen', cap:'16 cupos/salida', rating:'4,7', reviews:97, rnt:'55418', days:'Todos los días', policy:POL.flex,
+    desc:'Canoa por los túneles de manglar con pescadores locales. Aves, pesca artesanal y comida típica del pueblo.',
+    itin:[['7:00','Encuentro con la comunidad'],['7:20','Recorrido en canoa por los manglares'],['8:40','Demostración de pesca artesanal'],['9:30','Desayuno típico y regreso']],
+    incl:['Canoa y guía local','Desayuno típico'], excl:['Transporte a La Boquilla'],
+    bring:['Repelente','Bloqueador','Ropa clara'], tips:['Turismo comunitario: buen argumento para viajeros conscientes.'] },
+  totumo:{ dur:'Medio día · 5 h', start:'8:00 a.m.', meet:'Recogida en el hotel', cap:'25 cupos/día', rating:'4,3', reviews:260, rnt:'55418', days:'Todos los días', policy:POL.flex,
+    desc:'Baño de lodo en el Volcán del Totumo, a una hora de Cartagena, y lavado en la ciénaga con las lavanderas locales.',
+    itin:[['8:00','Recogida en el hotel'],['9:15','Llegada al volcán y baño de lodo'],['10:30','Lavado en la ciénaga'],['11:30','Almuerzo en Manzanillo del Mar'],['13:00','Regreso']],
+    incl:['Transporte','Entrada al volcán','Almuerzo'], excl:['Masajes y lavado (propinas)'],
+    bring:['Traje de baño viejo','Efectivo para propinas'], tips:['Avisa que piden propinas por masaje, fotos y lavado.'] },
+  trf:{ dur:'20–30 min', start:'Según el vuelo', meet:'Aeropuerto Rafael Núñez', cap:'Hasta 4 personas', rating:'4,8', reviews:610, rnt:'40981', days:'24 horas', policy:POL.flex,
+    desc:'Traslado privado del aeropuerto al hotel en carro con aire acondicionado y conductor verificado.',
+    itin:[['—','El conductor espera con un letrero a la salida'],['—','Trayecto directo al hotel']],
+    incl:['Carro privado','Espera de hasta 60 min por retraso'], excl:['Paradas adicionales'],
+    bring:['Número de vuelo'], tips:['Si eres taxista, véndelo de vuelta: aeropuerto el día de salida.'] },
+};
+const byId = id => PRODUCTS.find(p => p.id === id);
+const RESIDUAL = 0.02;
+const LEVELS = [
+  { key:'Bronce', min:0, max:2000000, bonus:'0 pp', perks:['Comisión base del operador','Liquidación semanal'] },
+  { key:'Plata', min:2000000, max:5000000, bonus:'1 pp', perks:['+1 punto de comisión','Material del kit sin costo'] },
+  { key:'Oro', min:5000000, max:Infinity, bonus:'2 pp', perks:['+2 puntos de comisión','Apareces primero en el catálogo','Soporte prioritario'] },
+];
+function makeQR(seed) {
+  const N = 25, g = []; let x = seed;
+  const rnd = () => { x = (x * 1103515245 + 12345) & 0x7fffffff; return x / 0x7fffffff; };
+  const finder = (r, c) => { for (const [fr, fc] of [[0,0],[0,N-7],[N-7,0]]) { const i = r-fr, j = c-fc; if (i>=0&&i<7&&j>=0&&j<7) return (i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4)) ? 1 : 0; if (i>=-1&&i<=7&&j>=-1&&j<=7) return 0; } return null; };
+  for (let r=0;r<N;r++) for (let c=0;c<N;c++) { const f = finder(r,c); g.push((f===null ? (r===6||c===6 ? (r+c)%2===0 : rnd()>.52) : f) ? '#062A1C' : '#fff'); }
+  return g;
+}
+const QR = makeQR(4821);
+
+class Component extends DCLogic {
+  state = { screen:'intro', stack:[], tipo:'Taxista', zona:'Centro Histórico', cuenta:'Nequi', cuentaNum:'', consent:true, kycStep:0, kycRunning:false, kycDone:false, approved:false,
+    catCat:'Todos', prodId:'ros', qty:2, tName:'', tPhone:'', link:null, kitSel:{ sticker:true, tarjeta:true, credencial:true }, kitAddr:'', kitRequested:false, withdrawn:0,
+    sales:[
+      { id:1, pid:'ros', who:'Ana M.', qty:2, date:'4 oct', status:'pend', kind:'sale' },
+      { id:2, pid:'chiva', who:'Grupo Pérez', qty:4, date:'2 oct', status:'rel', kind:'sale' },
+      { id:3, pid:'sunset', who:'Laura y Daniel', qty:2, date:'1 oct', status:'rel', kind:'sale' },
+      { id:4, pid:null, title:'Residual · Paquete Cartagena 4 noches', who:'Carlos R.', amount:3000000, date:'30 sep', status:'pend', kind:'res' },
+      { id:5, pid:'city', who:'Sofía G.', qty:3, date:'28 sep', status:'rel', kind:'sale' } ],
+    toast:null };
+  componentWillUnmount(){ clearTimeout(this.tt); (this.kt||[]).forEach(clearTimeout); }
+  say(m){ this.setState({ toast:m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 2200); }
+  TABS = ['panel','catalog','qr','travelers','payouts'];
+  go(screen, extra) { this.setState(x => ({ screen, stack: this.TABS.includes(screen) ? [] : [...x.stack, x.screen], ...(extra||{}) })); }
+  back = () => this.setState(x => { const st = [...x.stack]; return { screen: st.pop() || 'panel', stack: st }; });
+  earn(s) { if (s.kind === 'res') return s.amount * RESIDUAL; const p = byId(s.pid); return p.price * s.qty * p.pct / 100; }
+
+  renderVals() {
+    const st = this.state, S = st.screen;
+    const go = {}; ['form','kyc','review','panel','qr','kit','catalog','sell','travelers','payouts','levels'].forEach(k => go[k] = () => this.go(k));
+    const s = {}; ['intro','form','kyc','review','panel','qr','kit','catalog','plan','sell','link','travelers','payouts','levels'].forEach(k => s[k] = S === k);
+    s.nav = this.TABS.includes(S);
+
+    const IDX0 = 0; const IDX = [['intro','Quiero ser promotor','P1 · Alta'],['form','Perfil de promotor'],['kyc','KYC + antecedentes'],['review','Aprobación'],
+      ['qr','Mi QR y mi link','P2 · Activación'],['kit','Kit físico'],['catalog','Catálogo para vender'],['plan','Ficha del plan'],
+      ['sell','Venta asistida','P3 · Captura'],['link','Link de pago'],['travelers','Mis viajeros'],
+      ['panel','Panel del promotor','P4 · Ganancias'],['payouts','Cobros','P5 · Cobro']];
+    const index = IDX.map(([k,label,group],i) => ({ n:String(i+1).padStart(2,'0'), label, group: group||null, bg: S===k ? '#0A8F4E' : 'transparent', color: S===k ? '#fff' : '#DCEBE3',
+      go: () => k==='plan' ? this.go('plan', { planId: st.planId || 'ros' }) : k==='link' && !st.link ? this.say('Primero genera un link en Venta asistida') : this.go(k) }));
+
+    const TIPOS = [['Taxista','Recoges turistas'],['Recepción','Hotel u hostal'],['Guía','Turismo certificado'],['Otro','Comercio, tienda…']];
+    const tipos = TIPOS.map(([label,sub]) => ({ label, sub, border: st.tipo===label ? '#0A8F4E' : '#e1e3e8', bg: st.tipo===label ? '#F1FCF6' : '#fff', pick: () => this.setState({ tipo:label }) }));
+    const cuentas = ['Nequi','Bancolombia','Daviplata'].map(c => ({ label:c, border: st.cuenta===c ? '#0A8F4E' : '#e1e3e8', bg: st.cuenta===c ? '#DDF7E9' : '#fff', pick: () => this.setState({ cuenta:c }) }));
+
+    const KS = [['Cédula','Foto por ambos lados'],['Selfie con prueba de vida','Validamos que eres tú'],['Antecedentes','Policía, Procuraduría y listas']];
+    const kycSteps = KS.map(([title,sub],i) => { const done = st.kycDone || st.kycStep > i, act = st.kycRunning && st.kycStep === i;
+      return { title, sub, mark: done ? '✓' : String(i+1), dot: done ? '#2E6A4E' : act ? '#0A8F4E' : '#c9ccd6', bg: done ? '#f2f8f4' : '#fff', border: done ? '#cfe3d6' : act ? '#0A8F4E' : '#e7e8ec',
+        status: done ? 'Listo' : act ? 'Validando…' : 'Pendiente', stColor: done ? '#2E6A4E' : act ? '#0A7A43' : '#6b7186' }; });
+    const runKyc = () => { if (st.kycDone) { this.go('review'); return; } if (st.kycRunning || !st.consent) return;
+      this.setState({ kycRunning:true, kycStep:0 });
+      this.kt = [1,2,3].map(i => setTimeout(() => this.setState(i===3 ? { kycStep:3, kycRunning:false, kycDone:true } : { kycStep:i }), i*900)); };
+
+    const svgClock = React.createElement('svg',{width:34,height:34,viewBox:'0 0 24 24',fill:'none',stroke:'#0A7A43',strokeWidth:2,strokeLinecap:'round'},React.createElement('circle',{cx:12,cy:12,r:9}),React.createElement('path',{d:'M12 7v5l3 2'}));
+    const svgOk = React.createElement('svg',{width:34,height:34,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3,strokeLinecap:'round'},React.createElement('path',{d:'M20 6 9 17l-5-5'}));
+    const rv = st.approved
+      ? { icon: svgOk, iconBg:'#2E6A4E', title:'¡Ya eres promotor verificado!', body:'Tu QR y tu link están activos. Empieza a compartirlos con los turistas.', ctaLabel:'Ver mi QR', cta: () => this.go('qr'), pending:false }
+      : { icon: svgClock, iconBg:'#DDF7E9', title:'Estamos revisando tu solicitud', body:'El equipo de Viatto revisa tu verificación en menos de 48 horas. Te avisamos por WhatsApp.', ctaLabel:'Simular aprobación', cta: () => this.setState({ approved:true }), pending:true };
+
+    // earnings
+    let released = 0, pending = 0, residual = 0, monthSales = 0;
+    st.sales.forEach(x => { const e = this.earn(x); if (x.kind==='res') residual += e; if (x.status==='rel') released += e; else pending += e; if (x.kind==='sale') monthSales += byId(x.pid).price * x.qty; });
+    monthSales += 1400000; // ventas anteriores del mes
+    const e = { total: cop(released + pending), released: cop(released), pending: cop(pending), residual: cop(residual) };
+    const k = { sales: st.sales.filter(x => x.kind==='sale').length + 6, travelers: 14 + st.sales.filter(x => x.id > 100).length };
+    const li = LEVELS.findIndex(l => monthSales >= l.min && monthSales < l.max); const L = LEVELS[li], NX = LEVELS[li+1];
+    const lvl = { name: L.key, next: NX ? NX.key : L.key, bonus: NX ? NX.bonus : L.bonus, month: cop(monthSales),
+      pct: NX ? Math.round((monthSales - L.min) / (NX.min - L.min) * 100) + '%' : '100%', left: NX ? 'Faltan ' + cop(NX.min - monthSales) : 'Nivel máximo' };
+    const levels = LEVELS.map((l,i) => ({ name:l.key, perks:l.perks, range: l.max===Infinity ? 'Más de ' + cop(l.min) + ' en ventas al mes' : cop(l.min) + ' – ' + cop(l.max) + ' en ventas al mes',
+      tag: i===li ? 'TU NIVEL' : i<li ? 'Superado' : '', tagColor: i===li ? '#0A7A43' : '#2E6A4E', border: i===li ? '#0A8F4E' : '#e7e8ec', bg: i===li ? '#F1FCF6' : '#fff' }));
+
+    const sales = st.sales.slice(0,6).map(x => { const p = x.pid ? byId(x.pid) : null; const rel = x.status==='rel';
+      return { title: x.kind==='res' ? x.title : `${p.title} · ${x.qty}`, who:x.who, date:x.date, amt: cop(this.earn(x)),
+        status: rel ? 'Liberada' : x.kind==='res' ? 'Residual · pendiente' : 'Pendiente', stColor: rel ? '#2E6A4E' : '#0A7A43',
+        glyph: x.kind==='res' ? '∞' : '$', bg: x.kind==='res' ? '#DDF7E9' : '#DDECE2', color: x.kind==='res' ? '#075C33' : '#1f5a3f' }; });
+
+    // catalog
+    const CC = ['Todos','Islas','Ciudad','Bahía','Naturaleza','Servicios'];
+    const catChips = CC.map(c => ({ label:c, border: st.catCat===c ? '#062A1C' : '#d6d8de', bg: st.catCat===c ? '#062A1C' : '#fff', color: st.catCat===c ? '#fff' : '#062A1C', pick: () => this.setState({ catCat:c }) }));
+    const catalog = PRODUCTS.filter(p => st.catCat==='Todos' || p.cat===st.catCat).sort((a,b) => b.price*b.pct - a.price*a.pct)
+      .map(p => ({ ...p, priceCash: cop(p.price), earn: cop(p.price*p.pct/100), pct: p.pct + '%', sell: () => this.go('sell', { prodId:p.id, qty:2 }), open: () => this.go('plan', { planId:p.id }) }));
+    const PL = byId(st.planId || 'ros'), DL = DETAILS[PL.id];
+    const plan = { ...PL, ...DL, priceCash: cop(PL.price), earn: cop(PL.price*PL.pct/100), pct: PL.pct + '%',
+      facts:[{ k:'Duración', v:DL.dur },{ k:'Salida', v:DL.start },{ k:'Punto de encuentro', v:DL.meet },{ k:'Capacidad', v:DL.cap }],
+      itin: DL.itin.map(([t,d],i) => ({ t, d, line: i===DL.itin.length-1 ? 'transparent' : '#cfe3d6' })),
+      sell: () => this.go('sell', { prodId:PL.id, qty:2 }) };
+
+    const P = byId(st.prodId);
+    const prod = { ...P, priceCash: cop(P.price) };
+    const noTourist = !st.tName.trim() || st.tPhone.replace(/\D/g,'').length < 7;
+    const genLink = () => { if (noTourist) return;
+      const code = Math.random().toString(36).slice(2,6).toUpperCase();
+      this.setState({ link:{ pid:P.id, qty:st.qty, name:st.tName.trim(), phone:st.tPhone.trim(), url:`viatto.co/pagar/JUAN-CTG-${code}`, paid:false } });
+      this.go('link'); };
+    const L2 = st.link; const LP = L2 ? byId(L2.pid) : P;
+    const lk = L2 ? { ...L2, title: LP.title, qty: L2.qty + (L2.qty===1 ? ' persona' : ' personas'), total: cop(LP.price*L2.qty),
+      status: L2.paid ? 'Pagado' : 'Esperando pago del turista', statusSub: L2.paid ? `Tu comisión de ${cop(LP.price*L2.qty*LP.pct/100)} queda pendiente hasta el servicio.` : 'El link vence en 24 horas.',
+      stBg: L2.paid ? '#DDECE2' : '#F6EACB', dot: L2.paid ? '#2E6A4E' : '#E2B93B', btn: L2.paid ? 'Pago recibido' : 'Simular pago del turista', btnOpacity: L2.paid ? .5 : 1 } : {};
+    const simulatePaid = () => { if (!L2 || L2.paid) return;
+      this.setState(x => ({ link:{ ...x.link, paid:true }, sales:[{ id:100+x.sales.length, pid:L2.pid, who:L2.name, qty:L2.qty, date:'5 oct', status:'pend', kind:'sale' }, ...x.sales], tName:'', tPhone:'' }));
+      this.say('¡Venta registrada! ' + L2.name + ' quedó ligado a ti'); };
+
+    const TL = [...st.sales.filter(x => x.id > 100).map(x => ({ name:x.who, sub:'Captado hoy · QR', earned: cop(this.earn(x)), until:'Hasta oct 2027' })),
+      { name:'Ana Martínez', sub:'Captada 4 oct · QR en taxi', earned: cop(76000), until:'Hasta oct 2027' },
+      { name:'Carlos Rojas', sub:'Captado 12 sep · link WhatsApp', earned: cop(60000), until:'Hasta sep 2027' },
+      { name:'Laura León', sub:'Captada 1 oct · QR', earned: cop(52000), until:'Hasta oct 2027' },
+      { name:'Grupo Pérez', sub:'Captado 2 oct · QR en taxi', earned: cop(43200), until:'Hasta oct 2027' },
+      { name:'Sofía Gómez', sub:'Captada 28 sep · venta asistida', earned: cop(54000), until:'Hasta sep 2027' }];
+    const tlist = TL.map(t => ({ ...t, ini: t.name.split(' ').map(w => w[0]).slice(0,2).join('') }));
+
+    const available = Math.max(0, released - st.withdrawn);
+    const history = [
+      ...(st.withdrawn ? [{ t:'Retiro a ' + st.cuenta, d:'5 oct 2026', amt:'− ' + cop(st.withdrawn), color:'#062A1C' }] : []),
+      { t:'Liquidación semanal', d:'28 sep 2026', amt:'+ ' + cop(184000), color:'#2E6A4E' },
+      { t:'Retiro a ' + st.cuenta, d:'29 sep 2026', amt:'− ' + cop(184000), color:'#062A1C' },
+      { t:'Liquidación semanal', d:'21 sep 2026', amt:'+ ' + cop(126500), color:'#2E6A4E' } ];
+
+    const kitItems = [['sticker','STICKER','Sticker para taxi','Con tu QR, para el vidrio trasero'],['tarjeta','TARJETAS','Tarjetas para recepción','50 tarjetas con tu código'],['credencial','ID','Credencial "Promotor verificado"','Para mostrar al turista']]
+      .map(([id,tag,title,sub]) => { const on = !!st.kitSel[id]; return { tag, title, sub, border: on ? '#0A8F4E' : '#e1e3e8', bg: on ? '#F1FCF6' : '#fff', check: on ? '#0A8F4E' : '#fff', toggle: () => this.setState(x => ({ kitSel:{ ...x.kitSel, [id]: !x.kitSel[id] } })) }; });
+
+    const nav = {}; this.TABS.forEach(t => nav[t] = S===t ? '#0A7A43' : '#455073');
+
+    return { s, go, index, tipos, tipo: st.tipo, zona: st.zona, zonas:['Centro Histórico','Getsemaní','Bocagrande','Manga','Aeropuerto','La Boquilla'],
+      onZona: e => this.setState({ zona: e.target.value }), cuentas, cuenta: st.cuenta, cuentaNum: st.cuentaNum, onCuenta: e => this.setState({ cuentaNum: e.target.value }),
+      cuentaPh: st.cuenta==='Bancolombia' ? 'Número de cuenta de ahorros' : 'Número de celular ' + st.cuenta,
+      kycSteps, consent: st.consent, toggleConsent: () => this.setState(x => ({ consent: !x.consent })), runKyc,
+      kycCta: st.kycDone ? 'Enviar solicitud' : st.kycRunning ? 'Verificando…' : 'Iniciar verificación',
+      kycDisabled: (st.kycRunning || !st.consent) && !st.kycDone, kycOpacity: (st.kycRunning || !st.consent) && !st.kycDone ? .5 : 1,
+      rv, e, k, lvl, levels, sales, catChips, catalog, plan, prod, qty: st.qty,
+      inc: () => this.setState(x => ({ qty: Math.min(20, x.qty+1) })), dec: () => this.setState(x => ({ qty: Math.max(1, x.qty-1) })),
+      tName: st.tName, tPhone: st.tPhone, onTName: e => this.setState({ tName: e.target.value }), onTPhone: e => this.setState({ tPhone: e.target.value }),
+      attrWarn: st.tName.trim().toLowerCase().startsWith('marta'),
+      sellTotal: cop(P.price*st.qty), sellEarn: cop(P.price*st.qty*P.pct/100), noTourist, sellOpacity: noTourist ? .45 : 1, genLink, lk, simulatePaid,
+      tlist, p:{ available: cop(available), empty: available<=0, btnOpacity: available>0 ? 1 : .45 }, history,
+      withdraw: () => { if (available<=0) return; this.setState(x => ({ withdrawn: x.withdrawn + available })); this.say('Retiro de ' + cop(available) + ' enviado a ' + st.cuenta); },
+      kitItems, kitAddr: st.kitAddr, onKitAddr: e => this.setState({ kitAddr: e.target.value }),
+      kitStatus: st.kitRequested ? 'Solicitado · llega en 3 a 5 días' : 'Sticker para taxi, tarjetas y credencial',
+      requestKit: () => { this.setState({ kitRequested:true }); this.back(); this.say('Kit solicitado'); },
+      copyLink: () => this.say('Link copiado'), shareWa: () => this.say('Abriendo WhatsApp…'),
+      qrCells: QR, nav, toast: st.toast, back: this.back };
+  }
+}
+</script>
+</body>
+</html>

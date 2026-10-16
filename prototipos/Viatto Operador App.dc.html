@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html{color-scheme:light}input,select,textarea{background-color:#fff;color:#062A1C}
+body{margin:0;background:#062A1C;font-family:Poppins,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0A7A43}a:hover{color:#075C33}
+*{box-sizing:border-box}
+button,input{font-family:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid #0A8F4E;outline-offset:2px}
+@keyframes ta-fade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes ta-scan{0%{top:8%}50%{top:88%}100%{top:8%}}
+.ta-scroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:center;padding:32px 20px;font-family:Poppins,sans-serif">
+
+  <div style="width:230px;display:flex;flex-direction:column;gap:2px;color:#fff">
+    <img src="assets/logo_dark.png" alt="Viatto" style="width:150px;margin:0 0 6px -10px;mix-blend-mode:screen">
+    <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8FB0A0;margin-bottom:4px">MVP · App del operador</div>
+    <p style="margin:0 0 10px 10px;font-size:12px;line-height:1.5;color:#B9D3C6">Para avisos y check-in en el muelle. El catálogo y los pagos se gestionan en el panel web.</p>
+    <sc-for list="{{ index }}" as="it" hint-placeholder-count="7">
+      <button onClick="{{ it.go }}" style="display:flex;gap:10px;align-items:center;text-align:left;background:{{ it.bg }};color:{{ it.color }};border:0;border-radius:10px;padding:6px 10px;font:500 13px Poppins,sans-serif;cursor:pointer">
+        <span style="font-size:11px;opacity:.6;width:22px">{{ it.n }}</span><span>{{ it.label }}</span>
+      </button>
+    </sc-for>
+    <div style="display:flex;flex-direction:column;gap:4px;margin:14px 0 0 10px">
+      <a href="Viatto Operador.dc.html" style="font-size:12px;color:#9FF0C6">→ Panel web del operador</a>
+      <a href="Viatto App.dc.html" style="font-size:12px;color:#9FF0C6">← App del viajero</a>
+    </div>
+  </div>
+
+  <div style="position:relative;width:402px;height:874px;flex:none;border-radius:56px;background:#F3F7F5;overflow:hidden;box-shadow:0 0 0 11px #1c1c1e,0 0 0 13px #3a3a3c,0 40px 80px rgba(0,0,0,.6)">
+    <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:122px;height:36px;border-radius:20px;background:#000;z-index:50"></div>
+
+    <!-- HOY -->
+    <sc-if value="{{ s.today }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="O1 Hoy" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none">
+        <div style="padding:60px 20px 0;display:flex;align-items:center;gap:12px">
+          <span style="flex:none;width:44px;height:44px;border-radius:12px;background:#0A8F4E;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">NB</span>
+          <div style="flex:1;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:16px;font-weight:600;color:#062A1C">Náutica Bahía</span><span style="font-size:11.5px;color:#455073">Lunes 5 de octubre · Muelle La Bodeguita</span></div>
+          <button onClick="{{ go.alerts }}" aria-label="Avisos" style="position:relative;width:42px;height:42px;border-radius:50%;border:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="1.9"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><sc-if value="{{ unread }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#0A8F4E;box-shadow:0 0 0 2px #fff"></span></sc-if></button>
+        </div>
+        <sc-if value="{{ pendingCount }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openFirstPending }}" style="margin:18px 14px 0;width:calc(100% - 28px);border:1px dashed #d9a93a;border-radius:18px;background:#FBF4E2;padding:14px 16px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+            <span style="flex:none;width:40px;height:40px;border-radius:50%;background:#0A8F4E;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ pendingCount }}</span>
+            <span style="flex:1;display:flex;flex-direction:column;line-height:1.35"><b style="font-size:14px;font-weight:600;color:#6b4708">{{ pendingLabel }}</b><span style="font-size:12px;color:#6b4708">La más próxima vence en {{ firstLeft }}</span></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b4708" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+        </sc-if>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding:22px 22px 8px"><span style="font-size:17px;font-weight:600;color:#062A1C">Salidas de hoy</span><span style="font-size:12px;color:#455073">{{ todayProgress }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 14px">
+          <sc-for list="{{ todayList }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.open }}" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;border:0;background:#fff;text-align:left;cursor:pointer">
+              <div style="flex:none;width:52px;display:flex;flex-direction:column;align-items:center;line-height:1.2"><span style="font-size:15px;font-weight:600;color:#062A1C">{{ b.time }}</span><span style="font-size:10.5px;color:#6b7186">salida</span></div>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600;color:#062A1C">{{ b.name }} · {{ b.qty }}</span><span style="font-size:12px;color:#455073">{{ b.ptitle }}</span></div>
+              <span style="flex:none;font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;background:{{ b.stBg }};color:{{ b.stColor }}">{{ b.stLabel }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <button onClick="{{ go.pay }}" style="margin:16px 14px 20px;width:calc(100% - 28px);border:0;border-radius:20px;background:#062A1C;color:#fff;padding:16px 18px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#B9D3C6">Próximo pago · mié 7 oct</span><span style="font-size:24px;font-weight:600">{{ nextPay }}</span></span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+      </div>
+    </sc-if>
+
+    <!-- RESERVAS -->
+    <sc-if value="{{ s.list }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O2 Reservas" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none">
+        <div style="padding:60px 22px 0;font-size:24px;font-weight:600;color:#062A1C">Reservas</div>
+        <div style="display:flex;gap:6px;margin:14px 14px 0;padding:4px;border-radius:14px;background:#E3EBE7">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" style="flex:1;height:38px;border:0;border-radius:10px;background:{{ t.bg }};color:#062A1C;font:{{ t.font }};cursor:pointer">{{ t.label }}</button></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:14px">
+          <sc-for list="{{ listRows }}" as="b" hint-placeholder-count="4">
+            <button onClick="{{ b.open }}" style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:18px;border:0;background:#fff;text-align:left;cursor:pointer">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:600;color:#6b7186;flex:1">{{ b.id }} · {{ b.date }}</span><span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;background:{{ b.stBg }};color:{{ b.stColor }}">{{ b.stLabel }}</span></div>
+              <span style="font-size:15px;font-weight:600;color:#062A1C">{{ b.name }} · {{ b.qty }}</span>
+              <span style="font-size:12.5px;color:#455073">{{ b.ptitle }} · {{ b.total }}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ listEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:30px 8px;font-size:13px;color:#6b7186;text-align:center">Nada por aquí.</div></sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- DETALLE -->
+    <sc-if value="{{ s.detail }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O3 Detalle de reserva" class="ta-scroll" style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:56px 16px 30px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onClick="{{ back }}" aria-label="Volver" style="width:40px;height:40px;border-radius:50%;border:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#062A1C" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+          <span style="flex:1;font-size:18px;font-weight:600;color:#062A1C">{{ d.id }}</span>
+          <span style="font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px;background:{{ d.stBg }};color:{{ d.stColor }}">{{ d.stLabel }}</span>
+        </div>
+        <div style="border-radius:20px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:20px;font-weight:600;color:#062A1C">{{ d.name }}</span>
+          <span style="font-size:13px;color:#455073">{{ d.ptitle }}</span>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px">
+            <div style="border-radius:12px;background:#F3F7F5;padding:10px"><div style="font-size:10.5px;color:#6b7186">Fecha</div><div style="font-size:13px;font-weight:600;color:#062A1C">{{ d.date }}</div></div>
+            <div style="border-radius:12px;background:#F3F7F5;padding:10px"><div style="font-size:10.5px;color:#6b7186">Personas</div><div style="font-size:13px;font-weight:600;color:#062A1C">{{ d.qty }}</div></div>
+            <div style="border-radius:12px;background:#F3F7F5;padding:10px"><div style="font-size:10.5px;color:#6b7186">Promotor</div><div style="font-size:13px;font-weight:600;color:#062A1C">{{ d.promo }}</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:12px"><span style="color:#455073">Pago</span><span style="color:#062A1C">{{ d.pay }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:6px"><span style="color:#455073">Recibes</span><b style="font-weight:600;color:#2E6A4E">{{ d.net }}</b></div>
+        </div>
+        <button onClick="{{ callWa }}" style="height:46px;border:1.5px solid #d6d8de;border-radius:14px;background:#fff;color:#062A1C;font:600 13.5px Poppins,sans-serif;cursor:pointer">Escribir por WhatsApp · {{ d.phone }}</button>
+        <sc-if value="{{ d.isNew }}" hint-placeholder-val="{{ false }}">
+          <div style="border-radius:18px;border:1px dashed #d9a93a;background:#FBF4E2;padding:14px;display:flex;flex-direction:column;gap:10px">
+            <b style="font-size:14px;font-weight:600;color:#6b4708">Confirma en {{ d.left }}</b>
+            <span style="font-size:12px;line-height:1.5;color:#6b4708">Si no confirmas a tiempo, el viajero recibe un reembolso automático.</span>
+          </div>
+          <button onClick="{{ d.confirm }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;flex:none">Confirmar reserva</button>
+          <button onClick="{{ d.reject }}" style="height:46px;border:1.5px solid #8a6410;border-radius:14px;background:#fff;color:#6b4708;font:600 13.5px Poppins,sans-serif;cursor:pointer;flex:none">No puedo atender</button>
+        </sc-if>
+        <sc-if value="{{ d.isConf }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ d.scan }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#0A8F4E;color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer;flex:none">Hacer check-in con QR</button>
+        </sc-if>
+        <sc-if value="{{ d.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;line-height:1.5;padding:12px 14px;border-radius:14px;background:{{ d.noteBg }};color:{{ d.noteColor }}">{{ d.note }}</div></sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ESCANEAR -->
+    <sc-if value="{{ s.scan }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O4 Check-in con QR" style="position:absolute;inset:0;background:#03140D;display:flex;flex-direction:column;align-items:center;padding:60px 26px 40px;color:#fff">
+        <div style="align-self:stretch;display:flex;align-items:center;justify-content:space-between">
+          <button onClick="{{ back }}" aria-label="Cerrar" style="width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+          <span style="font-size:15px;font-weight:600">Check-in</span>
+          <span style="width:40px"></span>
+        </div>
+        <p style="margin:34px 0 0;font-size:14px;text-align:center;color:#DCEBE3">{{ scanHint }}</p>
+        <div style="position:relative;width:270px;height:270px;margin-top:26px;border-radius:24px;background:radial-gradient(circle at 50% 50%,#0B3A27 0%,#03140D 75%)">
+          <span style="position:absolute;left:0;top:0;width:46px;height:46px;border-left:4px solid #0A8F4E;border-top:4px solid #0A8F4E;border-top-left-radius:24px"></span>
+          <span style="position:absolute;right:0;top:0;width:46px;height:46px;border-right:4px solid #0A8F4E;border-top:4px solid #0A8F4E;border-top-right-radius:24px"></span>
+          <span style="position:absolute;left:0;bottom:0;width:46px;height:46px;border-left:4px solid #0A8F4E;border-bottom:4px solid #0A8F4E;border-bottom-left-radius:24px"></span>
+          <span style="position:absolute;right:0;bottom:0;width:46px;height:46px;border-right:4px solid #0A8F4E;border-bottom:4px solid #0A8F4E;border-bottom-right-radius:24px"></span>
+          {{ scanLine }}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-self:stretch;margin-top:auto">
+          <sc-for list="{{ scanTargets }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.scan }}" style="height:48px;border:0;border-radius:14px;background:{{ t.bg }};color:#fff;font:600 13.5px Poppins,sans-serif;cursor:pointer">{{ t.label }}</button>
+          </sc-for>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <input value="{{ code }}" onChange="{{ onCode }}" placeholder="O escribe el código" style="flex:1;min-width:0;height:46px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;padding:0 14px;font:400 14px Poppins,sans-serif;text-transform:uppercase">
+            <button onClick="{{ validateCode }}" style="height:46px;border:0;border-radius:12px;background:#fff;color:#062A1C;padding:0 16px;font:600 13px Poppins,sans-serif;cursor:pointer">Validar</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- RESULTADO -->
+    <sc-if value="{{ s.result }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O4 Resultado check-in" style="position:absolute;inset:0;background:{{ r.bg }};display:flex;flex-direction:column;padding:120px 26px 40px;color:#fff">
+        <span style="width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700">{{ r.mark }}</span>
+        <div style="font-size:28px;font-weight:600;margin-top:24px;line-height:1.2">{{ r.title }}</div>
+        <p style="margin:10px 0 0;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.9)">{{ r.body }}</p>
+        <sc-if value="{{ r.ok }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:24px;border-radius:18px;background:rgba(255,255,255,.12);padding:6px 16px">
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:13.5px"><span>Viajero</span><b style="font-weight:600">{{ r.name }}</b></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:13.5px"><span>Personas</span><b style="font-weight:600">{{ r.qty }}</b></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:13.5px"><span>Pago programado</span><b style="font-weight:600">{{ r.net }} · mié 7 oct</b></div>
+          </div>
+        </sc-if>
+        <button onClick="{{ r.again }}" style="margin-top:auto;height:52px;border:0;border-radius:14px;background:#fff;color:#062A1C;font:600 15px Poppins,sans-serif;cursor:pointer">Escanear otro</button>
+        <button onClick="{{ go.today }}" style="margin-top:10px;height:46px;border:1.5px solid rgba(255,255,255,.5);border-radius:14px;background:transparent;color:#fff;font:600 14px Poppins,sans-serif;cursor:pointer">Volver a Hoy</button>
+      </div>
+    </sc-if>
+
+    <!-- PAGOS -->
+    <sc-if value="{{ s.pay }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O5 Pagos" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none">
+        <div style="padding:60px 22px 0;font-size:24px;font-weight:600;color:#062A1C">Pagos</div>
+        <div style="margin:14px 14px 0;border-radius:22px;background:#062A1C;color:#fff;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;color:#B9D3C6">Próximo pago · mié 7 oct</span><span style="font-size:30px;font-weight:600">{{ nextPay }}</span><span style="font-size:12px;color:#B9D3C6">{{ nextCount }} · Bancolombia ****4821</span>
+        </div>
+        <div style="margin:10px 14px 0;border-radius:18px;background:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#455073">Por servicios confirmados</span><b style="font-size:15px;font-weight:600;color:#062A1C">{{ pendingPay }}</b></div>
+        <div style="padding:20px 22px 8px;font-size:15px;font-weight:600;color:#062A1C">Pagos recibidos</div>
+        <div style="display:flex;flex-direction:column;padding:0 22px 20px">
+          <sc-for list="{{ hist }}" as="h" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #E1EAE5;font-size:13.5px"><span style="color:#062A1C">{{ h.d }} <span style="color:#6b7186;font-size:12px">· {{ h.n }} reservas</span></span><b style="font-weight:600;color:#2E6A4E">+ {{ h.v }}</b></div></sc-for>
+        </div>
+        <a href="Viatto Operador.dc.html" style="display:block;margin:0 22px 20px;font-size:12.5px;font-weight:500">Ver detalle y facturas en el panel web →</a>
+      </div>
+    </sc-if>
+
+    <!-- AVISOS -->
+    <sc-if value="{{ s.alerts }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="O6 Avisos" class="ta-scroll" style="position:absolute;inset:0 0 82px 0;overflow-y:auto;scrollbar-width:none">
+        <div style="padding:60px 22px 0;display:flex;align-items:center;justify-content:space-between"><span style="font-size:24px;font-weight:600;color:#062A1C">Avisos</span><button onClick="{{ simBooking }}" style="height:34px;border:1.5px solid #062A1C;border-radius:10px;background:#fff;padding:0 12px;font:600 11.5px Poppins,sans-serif;cursor:pointer">Simular aviso</button></div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding:14px">
+          <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="5">
+            <button onClick="{{ a.open }}" style="display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:18px;border:0;background:{{ a.bg }};text-align:left;cursor:pointer">
+              <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ a.dot }};color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ a.glyph }}</span>
+              <span style="flex:1;display:flex;flex-direction:column;line-height:1.4"><b style="font-size:13.5px;font-weight:600;color:#062A1C">{{ a.t }}</b><span style="font-size:12.5px;color:#455073">{{ a.b }}</span><span style="font-size:11px;color:#6b7186;margin-top:2px">{{ a.when }}</span></span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- NAV -->
+    <sc-if value="{{ s.nav }}" hint-placeholder-val="{{ true }}">
+      <nav style="position:absolute;left:0;right:0;bottom:0;height:82px;background:#fff;border-top:1px solid #E3EBE7;display:grid;grid-template-columns:repeat(5,1fr);padding:10px 8px 0;z-index:10">
+        <button onClick="{{ go.today }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.today }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1Z"></path></svg>Hoy</button>
+        <button onClick="{{ go.list }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.list }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Reservas</button>
+        <button onClick="{{ go.scan }}" aria-label="Escanear" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:#0A7A43"><span style="margin-top:-22px;width:56px;height:56px;border-radius:50%;background:#0A8F4E;box-shadow:0 0 0 5px #fff;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg></span>Check-in</button>
+        <button onClick="{{ go.pay }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.pay }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2.5M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>Pagos</button>
+        <button onClick="{{ go.alerts }}" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:{{ nav.alerts }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>Avisos</button>
+      </nav>
+    </sc-if>
+
+    <sc-if value="{{ push }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ openPush }}" style="position:absolute;top:56px;left:10px;right:10px;z-index:60;border:0;background:rgba(255,255,255,.97);border-radius:20px;box-shadow:0 14px 40px rgba(6,42,28,.25);padding:12px 14px;display:flex;gap:12px;text-align:left;cursor:pointer;animation:ta-fade .25s ease">
+        <img src="assets/appicon.png" alt="" style="width:38px;height:38px;border-radius:9px;flex:none">
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="display:flex;justify-content:space-between;font-size:11px;color:#6b7186"><span>VIATTO OPERADORES</span><span>ahora</span></span><b style="font-size:13.5px;font-weight:600;color:#062A1C">Nueva reserva</b><span style="font-size:12.5px;line-height:1.4;color:#455073">{{ push }}</span></span>
+      </button>
+    </sc-if>
+    <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:50%;bottom:100px;transform:translateX(-50%);z-index:60;background:#062A1C;color:#fff;font-size:12.5px;padding:10px 18px;border-radius:20px;white-space:nowrap">{{ toast }}</div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const cop = n => '$' + Math.round(n).toLocaleString('es-CO');
+const PRODS = { ros:{ title:'Día en Islas del Rosario', price:380000, promo:10 }, pbl:{ title:'Playa Blanca y Cholón', price:290000, promo:10 } };
+const ST = { new:['Por confirmar','#DDF7E9','#075C33'], conf:['Confirmada','#E3E9F6','#2c4a86'], done:['Check-in ✓','#DDECE2','#1f5a3f'], ref:['Reembolsada','#ECEDF0','#455073'] };
+const TABS = ['today','list','scan','pay','alerts'];
+
+class Component extends DCLogic {
+  state = { screen:'today', stack:[], selId:null, tab:'new', code:'', result:null, push:null, toast:null, read:false,
+    bookings:[
+      { id:'TA-7K2Q', name:'Ana Martínez', phone:'+57 310 456 7812', pid:'ros', date:'Sáb 10 oct', qty:2, pay:'Wallet + tarjeta', promo:'JUAN-CTG', status:'new', left:'22 h' },
+      { id:'TA-9M4D', name:'Carlos Rojas', phone:'+57 300 218 9034', pid:'pbl', date:'Dom 11 oct', qty:4, pay:'Tarjeta', promo:null, status:'new', left:'5 h' },
+      { id:'TA-3H8P', name:'Laura León', phone:'+57 315 777 2201', pid:'ros', date:'Hoy', time:'7:30', qty:2, pay:'Wallet Viatto', promo:'JUAN-CTG', status:'conf' },
+      { id:'TA-5T1C', name:'Grupo Pérez', phone:'+57 301 555 0192', pid:'pbl', date:'Hoy', time:'8:15', qty:6, pay:'Wallet + PSE', promo:'MARIA-HTL', status:'conf' },
+      { id:'TA-6R2V', name:'Mateo Ruiz', phone:'+57 304 661 2290', pid:'ros', date:'Hoy', time:'7:30', qty:3, pay:'Tarjeta', promo:null, status:'done', checkin:'7:12 a.m.' },
+      { id:'TA-2B6R', name:'Sofía Gómez', phone:'+57 312 980 4410', pid:'ros', date:'Sáb 3 oct', qty:3, pay:'Tarjeta', promo:'JUAN-CTG', status:'done', checkin:'3 oct · 7:24 a.m.' },
+      { id:'TA-4W9X', name:'Kevin Mosquera', phone:'+57 320 114 6678', pid:'ros', date:'Lun 12 oct', qty:1, pay:'Tarjeta', promo:null, status:'ref' } ] };
+  componentWillUnmount(){ clearTimeout(this.tt); clearTimeout(this.pt); }
+  say(m){ this.setState({ toast:m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 2200); }
+  go(screen, extra){ this.setState(x => ({ screen, stack: TABS.includes(screen) ? [] : [...x.stack, x.screen], ...(extra||{}) , ...(screen==='alerts' ? { read:true } : {}) })); }
+  back = () => this.setState(x => { const st = [...x.stack]; return { screen: st.pop() || 'today', stack: st }; });
+  money(b){ const p = PRODS[b.pid], t = p.price*b.qty; return t - t*.10 - (b.promo ? t*p.promo/100 : 0); }
+  setB(id, patch){ this.setState(x => ({ bookings: x.bookings.map(b => b.id===id ? { ...b, ...patch } : b) })); }
+  checkin(b){ this.setB(b.id, { status:'done', checkin: new Date().toLocaleTimeString('es-CO',{ hour:'numeric', minute:'2-digit' }) });
+    this.setState(x => ({ screen:'result', stack:[...x.stack, x.screen], code:'', result:{ ok:true, name:b.name, qty:b.qty, net:this.money(b) } })); }
+  fail(msg){ this.setState(x => ({ screen:'result', stack:[...x.stack, x.screen], result:{ ok:false, msg } })); }
+
+  renderVals() {
+    const st = this.state, S = st.screen, B = st.bookings;
+    const go = {}; TABS.forEach(k => go[k] = () => this.go(k));
+    const s = { today:S==='today', list:S==='list', detail:S==='detail', scan:S==='scan', result:S==='result', pay:S==='pay', alerts:S==='alerts', nav: TABS.includes(S) && S!=='scan' };
+    const open = b => () => this.go('detail', { selId:b.id });
+    const row = b => { const [l,bg,c] = ST[b.status]; return { ...b, ptitle: PRODS[b.pid].title, qty: b.qty + (b.qty===1 ? ' persona' : ' personas'), total: cop(this.money(b)),
+      stLabel: b.status==='new' ? 'Vence ' + b.left : l, stBg:bg, stColor:c, open: open(b) }; };
+
+    const IDX = [['today','Hoy'],['list','Reservas'],['detail','Detalle de reserva'],['scan','Check-in con QR'],['result','Resultado check-in'],['pay','Pagos'],['alerts','Avisos']];
+    const index = IDX.map(([k,label],i) => ({ n:'O'+(i+1), label, bg: S===k ? '#0A8F4E' : 'transparent', color: S===k ? '#fff' : '#DCEBE3',
+      go: () => k==='detail' ? this.go('detail', { selId: st.selId || 'TA-7K2Q' }) : k==='result' ? (() => { const b = B.find(x => x.status==='conf'); b ? this.checkin(b) : this.fail('No hay reservas pendientes de check-in.'); })() : this.go(k) }));
+
+    const pend = B.filter(b => b.status==='new').sort((a,b) => parseInt(a.left)-parseInt(b.left));
+    const today = B.filter(b => b.date==='Hoy');
+    const todayList = today.map(b => ({ ...row(b), stLabel: b.status==='done' ? 'Abordó' : 'Por abordar' }));
+    const doneAll = B.filter(b => b.status==='done'), confAll = B.filter(b => b.status==='conf');
+    const tabs = [['new','Por confirmar'],['conf','Próximas'],['done','Pasadas']].map(([k,label]) => { const n = B.filter(b => k==='done' ? (b.status==='done'||b.status==='ref') : b.status===k).length;
+      return { label: label + ' ' + n, bg: st.tab===k ? '#fff' : 'transparent', font: st.tab===k ? '600 12.5px Poppins,sans-serif' : '500 12.5px Poppins,sans-serif', pick: () => this.setState({ tab:k }) }; });
+    const listRows = B.filter(b => st.tab==='done' ? (b.status==='done'||b.status==='ref') : b.status===st.tab).map(row);
+
+    const D = B.find(b => b.id===st.selId) || B[0]; const [dl,dbg,dc] = ST[D.status];
+    const d = { ...D, ptitle: PRODS[D.pid].title, qty:String(D.qty), promo: D.promo || 'Directo', net: cop(this.money(D)), stLabel:dl, stBg:dbg, stColor:dc,
+      isNew: D.status==='new', isConf: D.status==='conf',
+      confirm: () => { this.setB(D.id, { status:'conf' }); this.say('Confirmada. El viajero recibió su voucher'); },
+      reject: () => { this.setB(D.id, { status:'ref' }); this.say('Reembolso automático enviado'); },
+      scan: () => this.go('scan', { scanFor: D.id }),
+      note: D.status==='done' ? `Check-in ${D.checkin}. Recibes ${cop(this.money(D))} el mié 7 oct.` : D.status==='ref' ? 'Reserva reembolsada al viajero.' : null,
+      noteBg: D.status==='done' ? '#DDECE2' : '#ECEDF0', noteColor: D.status==='done' ? '#1f5a3f' : '#455073' };
+
+    const scanTargets = [...confAll.map(b => ({ label:`Simular escaneo · ${b.name} (${b.id})`, bg:'#0A8F4E', scan: () => this.checkin(b) })),
+      { label:'Simular QR no válido', bg:'rgba(255,255,255,.14)', scan: () => this.fail('Este voucher es de otro operador o ya fue usado.') }];
+    const R = st.result || { ok:true };
+    const r = R.ok ? { ok:true, bg:'#2E6A4E', mark:'✓', title:'Check-in validado', body:'Ya puede abordar. El pago queda programado.', name:R.name, qty:String(R.qty), net: cop(R.net||0) }
+      : { ok:false, bg:'#075C33', mark:'!', title:'QR no válido', body: R.msg };
+    r.again = () => this.setState(x => ({ screen:'scan', stack:x.stack }));
+
+    const HIST = [['Mié 30 sep',5,1754800],['Mié 23 sep',3,1074200],['Mié 16 sep',6,2033600],['Mié 9 sep',4,1353000]];
+    const alerts = [
+      ...pend.map(b => ({ glyph:'!', dot:'#0A8F4E', bg:'#fff', t:'Nueva reserva por confirmar', b:`${b.name} · ${PRODS[b.pid].title} · ${b.qty} pers. · ${b.date}. Vence en ${b.left}.`, when:'Hace poco', open: open(b) })),
+      { glyph:'✓', dot:'#2E6A4E', bg:'#fff', t:'Snorkel en Barú está en curaduría', b:'Te avisamos cuando el equipo de Viatto lo publique.', when:'Ayer', open: () => this.say('Se gestiona desde el panel web') },
+      { glyph:'$', dot:'#062A1C', bg:'#fff', t:'Pago enviado', b:'Recibiste $1.754.800 por 5 reservas.', when:'30 sep', open: go.pay },
+      { glyph:'×', dot:'#6b7186', bg:'#fff', t:'Reembolso automático', b:'TA-4W9X no se confirmó en 24 h y se reembolsó a Kevin Mosquera.', when:'29 sep', open: open(B.find(b => b.id==='TA-4W9X')) } ];
+
+    const simBooking = () => { const id = 'TA-' + Math.random().toString(36).slice(2,6).toUpperCase();
+      const nb = { id, name:'Valentina Gómez', phone:'+57 311 902 3345', pid:'ros', date:'Dom 18 oct', qty:2, pay:'Wallet Viatto', promo:'JUAN-CTG', status:'new', left:'24 h' };
+      this.setState(x => ({ bookings:[nb, ...x.bookings], push:`Valentina Gómez · Islas del Rosario · 2 personas · 18 oct. Confírmala en 24 h.`, pushId:id, read:false }));
+      clearTimeout(this.pt); this.pt = setTimeout(() => this.setState({ push:null }), 5000); };
+
+    const nav = {}; TABS.forEach(t => nav[t] = S===t ? '#0A7A43' : '#455073');
+    return { s, go, index, nav, back: this.back, unread: !st.read && pend.length>0,
+      pendingCount: pend.length ? String(pend.length) : null, pendingLabel: pend.length===1 ? '1 reserva por confirmar' : pend.length + ' reservas por confirmar', firstLeft: pend[0] ? pend[0].left : '',
+      openFirstPending: () => pend[0] && this.go('detail', { selId: pend[0].id }),
+      todayList, todayProgress: today.filter(b => b.status==='done').length + ' de ' + today.length + ' abordaron',
+      nextPay: cop(doneAll.reduce((a,b) => a + this.money(b), 0)), nextCount: doneAll.length + ' reservas', pendingPay: cop(confAll.reduce((a,b) => a + this.money(b), 0)),
+      hist: HIST.map(([dd,n,v]) => ({ d:dd, n, v:cop(v) })),
+      tabs, listRows, listEmpty: listRows.length===0, d, callWa: () => this.say('Abriendo WhatsApp…'),
+      scanTargets, scanHint: confAll.length ? 'Apunta al QR del voucher del viajero' : 'No hay reservas pendientes de check-in hoy',
+      code: st.code, onCode: e => this.setState({ code: e.target.value }),
+      validateCode: () => { const b = B.find(x => x.id === st.code.trim().toUpperCase()); if (b && b.status==='conf') this.checkin(b); else this.fail(b && b.status==='done' ? 'Este voucher ya se usó.' : 'No encontramos ese código.'); },
+      r, alerts, simBooking, push: st.push, openPush: () => { this.setState({ push:null }); this.go('detail', { selId: st.pushId }); }, toast: st.toast,
+      scanLine: React.createElement('span', { style:{ position:'absolute', left:'8%', right:'8%', height:2, background:'#0A8F4E', boxShadow:'0 0 12px #0A8F4E', animation:'ta-scan 2.4s ease-in-out infinite' } }) };
+  }
+}
+</script>
+</body>
+</html>

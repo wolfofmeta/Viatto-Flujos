@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa de Cartagena</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<style>
+html,body,#map{margin:0;height:100%;width:100%;background:#dfeee7;font-family:Poppins,sans-serif}
+.leaflet-tile-pane{filter:saturate(.8)}
+.leaflet-control-attribution{font-size:9px}
+.pin{display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-100%);cursor:pointer}
+.pin i{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--c);border:3px solid #fff;box-shadow:0 3px 8px rgba(6,42,28,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.pin i b{transform:rotate(45deg);display:flex;line-height:0}
+.pin span{margin-top:4px;background:#fff;color:#062A1C;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:9px;white-space:nowrap;box-shadow:0 2px 6px rgba(6,42,28,.18)}
+.pin.on i{transform:rotate(-45deg) scale(1.25);background:#062A1C}
+.pin.on span{background:#062A1C;color:#fff}
+#map.far .pin span{display:none}#map.far .pin.on span{display:block}
+</style></head>
+<body><div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var COLORS={isla:'#13b5a6',museo:'#8a5a2b',tour:'#0A8F4E',exp:'#FF6A3D',muelle:'#2c6fb3',hotel:'#5a6b8a'};
+var SVG='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">';
+var ICONS={
+ isla:SVG+'<path d="M13 21c0-5 0-9-2-13"/><path d="M11 8C9 5 5 5 3 7c3 0 5 1 6 3"/><path d="M11 8c1-3 5-5 8-3-3 1-5 2-6 4"/><path d="M11 8c3-1 7 0 8 3-3-1-6-1-8 0"/><path d="M2 21h20"/></svg>',
+ museo:SVG+'<path d="M3 21h18M4 10h16M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg>',
+ tour:SVG+'<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>',
+ exp:SVG+'<path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/></svg>',
+ muelle:SVG+'<circle cx="12" cy="5" r="2"/><path d="M12 7v14"/><path d="M5 13a7 7 0 0 0 14 0"/><path d="M8 11h8"/></svg>',
+ hotel:SVG+'<path d="M3 20V8"/><path d="M3 14h18v6"/><path d="M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="2"/></svg>'
+};
+var map=L.map('map',{zoomControl:false,attributionControl:true}).setView([10.40,-75.55],12);
+L.control.zoom({position:'topright'}).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri · © OpenStreetMap contributors'}).addTo(map);
+function lbl(){document.getElementById('map').classList.toggle('far',map.getZoom()<13);}map.on('zoomend',lbl);
+var pois=[],markers={},cat='Todos',sel=null;
+function send(m){m.src='ta-map';parent.postMessage(m,'*');}
+function icon(p){return L.divIcon({className:'',iconSize:[0,0],html:'<div class="pin'+(p.id===sel?' on':'')+'" style="--c:'+(COLORS[p.type]||'#0A8F4E')+'"><i><b>'+(ICONS[p.type]||'')+'</b></i><span>'+p.short+'</span></div>'});}
+function render(fit){
+  Object.keys(markers).forEach(function(k){map.removeLayer(markers[k]);});markers={};
+  var vis=pois.filter(function(p){return cat==='Todos'||p.cat===cat;});
+  vis.forEach(function(p){var m=L.marker([p.lat,p.lng],{icon:icon(p),zIndexOffset:p.id===sel?1000:0}).addTo(map);m.on('click',function(){sel=p.id;render(false);map.panTo([p.lat,p.lng]);send({type:'poi',id:p.id});});markers[p.id]=m;});
+  var fv=vis.length>1?vis.filter(function(p){return p.id!=='totumo'}):vis;
+  if(fit&&fv.length){map.fitBounds(L.latLngBounds(fv.map(function(p){return[p.lat,p.lng]})),{padding:[40,40],maxZoom:14});}
+  lbl();
+}
+window.addEventListener('message',function(e){var d=e.data||{};if(d.src!=='ta-app')return;
+  if(d.type==='pois'){pois=d.pois||[];cat=d.cat||'Todos';sel=d.sel||null;render(true);if(sel){var p=pois.find(function(x){return x.id===sel});if(p)map.setView([p.lat,p.lng],14);}}
+  if(d.type==='filter'){cat=d.cat||'Todos';render(true);}
+  if(d.type==='select'){sel=d.id;render(false);var p=pois.find(function(x){return x.id===sel});if(p)map.setView([p.lat,p.lng],Math.max(map.getZoom(),13));}
+});
+send({type:'ready'});
+</script></body></html>
